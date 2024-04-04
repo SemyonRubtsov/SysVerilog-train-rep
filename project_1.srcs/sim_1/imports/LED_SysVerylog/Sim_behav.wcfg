@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="Sim_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="Sim" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="202,067.255666 us"></ZoomStartTime>
+      <ZoomEndTime time="202,074.045667 us"></ZoomEndTime>
+      <Cursor1Time time="202,072.914000 us"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="243"></NameColumnWidth>
+      <ValueColumnWidth column_width="118"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="10" />
+   <wvobject type="logic" fp_name="/Sim/i_clk">
+      <obj_property name="ElementShortName">i_clk</obj_property>
+      <obj_property name="ObjectShortName">i_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Sim/i_rst">
+      <obj_property name="ElementShortName">i_rst</obj_property>
+      <obj_property name="ObjectShortName">i_rst</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Sim/CLK_FREQUENCY">
+      <obj_property name="ElementShortName">CLK_FREQUENCY[31:0]</obj_property>
+      <obj_property name="ObjectShortName">CLK_FREQUENCY[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/Sim/BLINK_PERIOD">
+      <obj_property name="ElementShortName">BLINK_PERIOD</obj_property>
+      <obj_property name="ObjectShortName">BLINK_PERIOD</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/Sim/T_CLK">
+      <obj_property name="ElementShortName">T_CLK</obj_property>
+      <obj_property name="ObjectShortName">T_CLK</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Sim/UUT_2/clk_in1_p">
+      <obj_property name="ElementShortName">clk_in1_p</obj_property>
+      <obj_property name="ObjectShortName">clk_in1_p</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Sim/UUT_2/clk_in1_n">
+      <obj_property name="ElementShortName">clk_in1_n</obj_property>
+      <obj_property name="ObjectShortName">clk_in1_n</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Sim/UUT_2/l/on_led">
+      <obj_property name="ElementShortName">on_led</obj_property>
+      <obj_property name="ObjectShortName">on_led</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Sim/UUT_2/l/o_led">
+      <obj_property name="ElementShortName">o_led[3:0]</obj_property>
+      <obj_property name="ObjectShortName">o_led[3:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Sim/UUT_2/l/counter_value">
+      <obj_property name="ElementShortName">counter_value[27:0]</obj_property>
+      <obj_property name="ObjectShortName">counter_value[27:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>
