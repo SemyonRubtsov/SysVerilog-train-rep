@@ -21,14 +21,14 @@
 
 module Sim
 #(
-    parameter CLK_FREQUENCY = 50000000, parameter BLINK_PERIOD = 1
+    parameter CLK_FREQUENCY = 50000000, parameter BLINK_PERIOD = 0.0001
 );
 //-- Constants
     localparam T_CLK = 1.0e9 / CLK_FREQUENCY; // ns
 //-- Signals
     bit i_clk = 1'b0; bit i_rst = 1'b0; bit i_rst = 1'b0;
 //-- 
-    top# ( .CLK_FREQUENCY(CLK_FREQUENCY),
+    Lab2top# ( .CLK_FREQUENCY(CLK_FREQUENCY),
     .BLINK_PERIOD (BLINK_PERIOD)) UUT_2 (
     .clk_in1_p (i_clk),
     .clk_in1_n (!i_clk),
