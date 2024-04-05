@@ -27,11 +27,11 @@ module Lab1Multiplexor(
     );
 always @ (*) begin
     case (i_sel)
-        2'b00: o_f<=i_x[0];
-        2'b01: o_f<=i_x[1];
-        2'b10: o_f<=i_x[2];
-        2'b11: o_f<=i_x[3];
-        default : o_f<=0;
+        0: o_f = i_x[0];
+        1: o_f = i_x[1];
+        2: o_f = i_x[2];
+        3: o_f = i_x[3];
+        default : o_f = 0;
     endcase
 end
 

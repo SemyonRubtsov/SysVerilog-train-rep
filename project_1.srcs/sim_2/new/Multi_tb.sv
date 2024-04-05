@@ -26,32 +26,19 @@ module Multi_tb
 );
     localparam T_CLK = 20; // ns
     
-    logic [3:0]i_x = '0; bit i_sel = 2'b00;
+    logic [3:0]i_x = '0; logic[1:0] i_sel = 0;
     
-    Lab1Multiplexor m0 (.i_x(i_s),.i_sel(i_sel));
+    Lab1Multiplexor m0 (.i_x(i_x), .i_sel(i_sel));
     
-    always #(T_CLK/2)
-    begin
-    i_x[3]=!i_x[3];
-    end
+    always #(T_CLK/2) i_x[3] <= !i_x[3];
     
-    always #(1.5*T_CLK/2)
-    begin
-    //#(1.5*T_CLK) i_x[0]=!i_x[0];
-    i_x[2]=!i_x[2];
-    end
+    always #(1.5*T_CLK/2) i_x[2] <= !i_x[2];
     
-    always #((T_CLK-5)/2)
-    begin
-    //#(1.5*T_CLK) i_x[0]=!i_x[0];
-    i_x[1]=!i_x[1];
-    end
+    always #((T_CLK-5)/2) i_x[1] <= !i_x[1];
     
-    always #(0.8*T_CLK/2)
-    begin
-    //#(1.5*T_CLK) i_x[0]=!i_x[0];
-    i_x[0]=!i_x[0];
-    end
+    always #(0.8*T_CLK/2) i_x[0] <= !i_x[0];
+    
+    always #(8*T_CLK) i_sel [1:0] = i_sel [1:0]+1;
     
 endmodule
 

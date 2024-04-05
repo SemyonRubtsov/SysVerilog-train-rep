@@ -11,7 +11,7 @@
 // Tool Versions: 
 // Description: 
 // 
-// Dependencies: 
+// Dependencies: bv
 // 
 // Revision:
 // Revision 0.01 - File Created
@@ -27,7 +27,7 @@ module led
 (
     input wire i_clk,
     input wire i_rst, //!!!
-    output logic [3:0] o_led='0
+    output logic [3:0] o_led = '0
 );
 
 //-- Constants
@@ -39,33 +39,23 @@ module led
     reg [COUNTER_WIDTH -1 : 0] counter_value = '0;
     always_ff @(posedge i_clk) begin
         if (i_rst || counter_value == COUNTER_PERIOD-1)
-        begin
-            //o_led<=0;
             counter_value <= 0;
-        end
-        else begin
-            //o_led<=1;
+        else
             counter_value <= counter_value +1;
-        end;
         
         if (counter_value < COUNTER_PERIOD/2)
-        begin
-            //$display("Hello World\n");
-		    //$finish;
-            on_led<=0;
-        end
-        else begin
-            on_led<=1;
-        end;
+            on_led <= 0;
+        else
+            on_led <= 1;
         //o_led[3:1]<=on_led * 3'b111;
-        o_led[3:1]<={$size(o_led[3:1]){on_led}};
         //o_led[3:1]<=on_led ? '1 : '0;
-        o_led[0]<=!on_led;
+        o_led[3:1] <= {$size(o_led[3:1]){on_led}};
+        o_led[0] <= !on_led;
     end
 
 endmodule
 
-module top
+module Lab2top
 (
     input wire clk_in1_p,
     input wire clk_in1_n,
@@ -75,11 +65,6 @@ module top
 );
 
 wire [2:0] i_clk;
-//wire clk_in1_p;
-//wire clk_in1_n;
-//wire wiz_lock;
-
-
 
 clk_wiz_0 instance_name
    (
