@@ -29,7 +29,8 @@ module Sim
     bit i_clk = 1'b0; bit i_rst = 1'b0; bit i_rst = 1'b0;
 //-- 
     Lab2top# ( .CLK_FREQUENCY(CLK_FREQUENCY),
-    .BLINK_PERIOD (BLINK_PERIOD)) UUT_2 (
+    .BLINK_PERIOD (BLINK_PERIOD))
+    UUT_2 (
     .clk_in1_p (i_clk),
     .clk_in1_n (!i_clk),
     .i_rst(i_rst)

@@ -11,37 +11,33 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="17,812,456.541 ns"></ZoomStartTime>
-      <ZoomEndTime time="17,812,490.692 ns"></ZoomEndTime>
-      <Cursor1Time time="17,812,485.000 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="137.401 ns"></ZoomEndTime>
+      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="243"></NameColumnWidth>
-      <ValueColumnWidth column_width="114"></ValueColumnWidth>
+      <ValueColumnWidth column_width="110"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="6" />
-   <wvobject type="logic" fp_name="/Multi_tb/i_x">
-      <obj_property name="ElementShortName">i_x</obj_property>
-      <obj_property name="ObjectShortName">i_x</obj_property>
+   <WVObjectSize size="5" />
+   <wvobject type="array" fp_name="/Multi_tb/m0/i_x">
+      <obj_property name="ElementShortName">i_x[3:0]</obj_property>
+      <obj_property name="ObjectShortName">i_x[3:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/Multi_tb/i_sel">
-      <obj_property name="ElementShortName">i_sel</obj_property>
-      <obj_property name="ObjectShortName">i_sel</obj_property>
+   <wvobject type="array" fp_name="/Multi_tb/m0/i_sel">
+      <obj_property name="ElementShortName">i_sel[1:0]</obj_property>
+      <obj_property name="ObjectShortName">i_sel[1:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/Multi_tb/i_s">
-      <obj_property name="ElementShortName">i_s</obj_property>
-      <obj_property name="ObjectShortName">i_s</obj_property>
+   <wvobject type="logic" fp_name="/Multi_tb/m0/o_f">
+      <obj_property name="ElementShortName">o_f</obj_property>
+      <obj_property name="ObjectShortName">o_f</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/Multi_tb/CLK_FREQUENCY">
       <obj_property name="ElementShortName">CLK_FREQUENCY[31:0]</obj_property>
       <obj_property name="ObjectShortName">CLK_FREQUENCY[31:0]</obj_property>
    </wvobject>
-   <wvobject type="other" fp_name="/Multi_tb/T_CLK">
-      <obj_property name="ElementShortName">T_CLK</obj_property>
-      <obj_property name="ObjectShortName">T_CLK</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/Multi_tb/m0/o_f">
-      <obj_property name="ElementShortName">o_f</obj_property>
-      <obj_property name="ObjectShortName">o_f</obj_property>
+   <wvobject type="array" fp_name="/Multi_tb/T_CLK">
+      <obj_property name="ElementShortName">T_CLK[31:0]</obj_property>
+      <obj_property name="ObjectShortName">T_CLK[31:0]</obj_property>
    </wvobject>
 </wave_config>

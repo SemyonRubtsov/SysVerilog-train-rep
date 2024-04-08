@@ -12,12 +12,12 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000000000 ms"></ZoomStartTime>
-      <ZoomEndTime time="13.980000001 ms"></ZoomEndTime>
-      <Cursor1Time time="4.238410000 ms"></Cursor1Time>
+      <ZoomEndTime time="72.700000001 ms"></ZoomEndTime>
+      <Cursor1Time time="14.960510000 ms"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="243"></NameColumnWidth>
-      <ValueColumnWidth column_width="98"></ValueColumnWidth>
+      <ValueColumnWidth column_width="70"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="11" />
    <wvobject type="logic" fp_name="/Sim/i_clk">
@@ -53,11 +53,6 @@
       <obj_property name="ObjectShortName">o_led[3:0]</obj_property>
       <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/l0/counter_value">
-      <obj_property name="ElementShortName">counter_value[12:0]</obj_property>
-      <obj_property name="ObjectShortName">counter_value[12:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/Sim/UUT_2/l0/PWM">
       <obj_property name="ElementShortName">PWM[31:0]</obj_property>
       <obj_property name="ObjectShortName">PWM[31:0]</obj_property>
@@ -66,5 +61,9 @@
    <wvobject type="array" fp_name="/Sim/UUT_2/l0/pwm_value">
       <obj_property name="ElementShortName">pwm_value[31:0]</obj_property>
       <obj_property name="ObjectShortName">pwm_value[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Sim/UUT_2/l0/PWM_counter">
+      <obj_property name="ElementShortName">PWM_counter[1249:0]</obj_property>
+      <obj_property name="ObjectShortName">PWM_counter[1249:0]</obj_property>
    </wvobject>
 </wave_config>
