@@ -75,7 +75,7 @@ clk_wiz_0 instance_name
     // Clock out ports
     .clk_out1(i_clk[0]),     // output clk_out1
     // Status and control signals
-    .reset(i_rst), // input reset
+    //.reset(i_rst), // input reset
     .locked(locked),       // output locked
    // Clock in ports
     .clk_in1_p(clk_in1_p),    // input clk_in1_p
