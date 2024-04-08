@@ -94,7 +94,7 @@
 module led_PWM
 #(
     parameter CLK_FREQUENCY = 200000000, // Гц
-    parameter BLINK_PERIOD = 1 // секунды
+    parameter BLINK_PERIOD = 3 // секунды
 )
 (
     input wire i_clk,
@@ -105,7 +105,7 @@ module led_PWM
 //-- Constants
     localparam COUNTER_PERIOD = int'(BLINK_PERIOD * CLK_FREQUENCY);
     localparam COUNTER_WIDTH = int'($ceil($clog2(COUNTER_PERIOD +1)));
-    localparam PWM_PERIOD=int'(COUNTER_PERIOD/100/2);
+    localparam PWM_PERIOD=int'(COUNTER_PERIOD/200/2);
     localparam PWM_WIDTH = int'($ceil($clog2(PWM_PERIOD +1)));
     
     
@@ -127,25 +127,31 @@ module led_PWM
         else
             counter_value <= counter_value +1;
             
-        if (PWM_counter==PWM_PERIOD)
+    if (PWM_counter==PWM_PERIOD)
         begin
-            if ((counter_value < COUNTER_PERIOD/2) && PWM<100)
+            if ((counter_value < COUNTER_PERIOD/2) && PWM<=100)
                 PWM=PWM+1;
             if ((counter_value > COUNTER_PERIOD/2) && PWM>0)
                 PWM=PWM-1;
             PWM_counter<=0;
         end
-        else
+    else
             PWM_counter<=PWM_counter+1;
         
         
-        if (pwm_value > 100)
+    if (pwm_value >= 100)
         begin
             pwm_value=0;
         end
-        else
-            on_led=!on_led;
-        pwm_value=pwm_value+1;
+    else
+            pwm_value=pwm_value+1;
+    
+    
+    
+    if (pwm_value<PWM)
+        on_led=1;
+    else
+        on_led=0;
             
         //on_led=pwm_value;
 

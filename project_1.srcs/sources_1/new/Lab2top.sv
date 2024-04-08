@@ -56,6 +56,10 @@
 //endmodule
 
 module Lab2top
+#(
+    parameter CLK_FREQUENCY = 200000000, // Гц
+    parameter BLINK_PERIOD = 1 // секунды
+)
 (
     input wire clk_in1_p,
     input wire clk_in1_n,
@@ -78,7 +82,8 @@ clk_wiz_0 instance_name
     .clk_in1_n(clk_in1_n)
     );    // input clk_in1_n
 
-led_PWM l0 (.i_clk(i_clk[0]),.i_rst(i_rst),.o_led(o_led));
+led_PWM# ( .CLK_FREQUENCY(CLK_FREQUENCY),
+    .BLINK_PERIOD (BLINK_PERIOD)) l0 (.i_clk(i_clk[0]),.i_rst(i_rst),.o_led(o_led));
 
 endmodule
 
