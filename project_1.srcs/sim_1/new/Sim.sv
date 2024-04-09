@@ -21,7 +21,7 @@
 
 module Sim
 #(
-    parameter CLK_FREQUENCY = 1e9, parameter BLINK_PERIOD = 1e-5//0.0001
+    parameter CLK_FREQUENCY = 1e9, parameter BLINK_PERIOD = 2e-5//0.0001
 );
 //-- Constants
     localparam T_CLK = 1.0e9 / CLK_FREQUENCY; // ns

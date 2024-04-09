@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
-      <ZoomEndTime time="7.311680 us"></ZoomEndTime>
-      <Cursor1Time time="3.046500 us"></Cursor1Time>
+      <ZoomStartTime time="6.930000 us"></ZoomStartTime>
+      <ZoomEndTime time="16.820001 us"></ZoomEndTime>
+      <Cursor1Time time="13.860000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="243"></NameColumnWidth>
-      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+      <ValueColumnWidth column_width="62"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="18" />
+   <WVObjectSize size="9" />
    <wvobject type="logic" fp_name="/Sim/i_clk">
       <obj_property name="ElementShortName">i_clk</obj_property>
       <obj_property name="ObjectShortName">i_clk</obj_property>
@@ -48,60 +48,13 @@
       <obj_property name="ElementShortName">clk_in1_n</obj_property>
       <obj_property name="ObjectShortName">clk_in1_n</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/l0/o_led">
+   <wvobject type="logic" fp_name="/Sim/UUT_2/\l0[1] /on_led">
+      <obj_property name="ElementShortName">on_led</obj_property>
+      <obj_property name="ObjectShortName">on_led</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Sim/UUT_2/\l0[1] /o_led">
       <obj_property name="ElementShortName">o_led[3:0]</obj_property>
       <obj_property name="ObjectShortName">o_led[3:0]</obj_property>
       <obj_property name="isExpanded"></obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/l0/PWM">
-      <obj_property name="ElementShortName">PWM[7:0]</obj_property>
-      <obj_property name="ObjectShortName">PWM[7:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/l0/pwm_value">
-      <obj_property name="ElementShortName">pwm_value[7:0]</obj_property>
-      <obj_property name="ObjectShortName">pwm_value[7:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/l0/pwm_value">
-      <obj_property name="ElementShortName">pwm_value[7:0]</obj_property>
-      <obj_property name="ObjectShortName">pwm_value[7:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      <obj_property name="CellHeight">100</obj_property>
-      <obj_property name="AnalogYRangeMin">0.000000</obj_property>
-      <obj_property name="AnalogYRRangeMax">0.000000</obj_property>
-      <obj_property name="AnalogInterpolation">ANALOG_INTERPOLATION_HOLD</obj_property>
-      <obj_property name="AnalogOffscale">ANALOG_OFFSCALE_HIDE</obj_property>
-      <obj_property name="AnalogHorizLine">0.000000</obj_property>
-      <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/l0/PWM_counter">
-      <obj_property name="ElementShortName">PWM_counter[4:0]</obj_property>
-      <obj_property name="ObjectShortName">PWM_counter[4:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/Sim/UUT_2/l0/CLK_FREQUENCY">
-      <obj_property name="ElementShortName">CLK_FREQUENCY</obj_property>
-      <obj_property name="ObjectShortName">CLK_FREQUENCY</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/Sim/UUT_2/l0/BLINK_PERIOD">
-      <obj_property name="ElementShortName">BLINK_PERIOD</obj_property>
-      <obj_property name="ObjectShortName">BLINK_PERIOD</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/l0/COUNTER_PERIOD">
-      <obj_property name="ElementShortName">COUNTER_PERIOD[63:0]</obj_property>
-      <obj_property name="ObjectShortName">COUNTER_PERIOD[63:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/l0/COUNTER_WIDTH">
-      <obj_property name="ElementShortName">COUNTER_WIDTH[63:0]</obj_property>
-      <obj_property name="ObjectShortName">COUNTER_WIDTH[63:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/l0/PWM_PERIOD">
-      <obj_property name="ElementShortName">PWM_PERIOD[31:0]</obj_property>
-      <obj_property name="ObjectShortName">PWM_PERIOD[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/l0/PWM_WIDTH">
-      <obj_property name="ElementShortName">PWM_WIDTH[63:0]</obj_property>
-      <obj_property name="ObjectShortName">PWM_WIDTH[63:0]</obj_property>
    </wvobject>
 </wave_config>
