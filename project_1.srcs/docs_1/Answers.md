@@ -79,13 +79,13 @@ Always_ff описывает выполнение операций в flip-flop 
 
 i_rstn|  led_on | o_led |
 ------|---------|-------|
-0     |0        |0b0111 |
-0     |1        |0b1000 |
-1     |0        |0b0000 |
-1     |1        |0b1000 |
-    
+0     |0        |0b1111 |
+0     |1        |0b1111 |
+1     |0        |0b1110 |
+1     |1        |0b0001 |
+
     г) localparam COUNTER_WIDTH = int($ceil($clog2(COUNTER_PERIOD +1)));
-с.м. 1.6
+см. 1.6
 
     д) always #(T_CLK/2) i_clk = ~i_clk;
 Инверсия сигнала i_clk каждые пол периода T_CLK
