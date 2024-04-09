@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="6.930000 us"></ZoomStartTime>
-      <ZoomEndTime time="16.820001 us"></ZoomEndTime>
-      <Cursor1Time time="13.860000 us"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,478.001 ns"></ZoomEndTime>
+      <Cursor1Time time="0.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="243"></NameColumnWidth>
-      <ValueColumnWidth column_width="62"></ValueColumnWidth>
+      <NameColumnWidth column_width="241"></NameColumnWidth>
+      <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="9" />
    <wvobject type="logic" fp_name="/Sim/i_clk">
@@ -48,11 +48,11 @@
       <obj_property name="ElementShortName">clk_in1_n</obj_property>
       <obj_property name="ObjectShortName">clk_in1_n</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/Sim/UUT_2/\l0[1] /on_led">
+   <wvobject type="logic" fp_name="/Sim/UUT_2/l0/on_led">
       <obj_property name="ElementShortName">on_led</obj_property>
       <obj_property name="ObjectShortName">on_led</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/\l0[1] /o_led">
+   <wvobject type="array" fp_name="/Sim/UUT_2/l0/o_led">
       <obj_property name="ElementShortName">o_led[3:0]</obj_property>
       <obj_property name="ObjectShortName">o_led[3:0]</obj_property>
       <obj_property name="isExpanded"></obj_property>

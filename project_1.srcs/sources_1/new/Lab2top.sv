@@ -46,7 +46,7 @@ clk_wiz_0 instance_name
     .clk_in1_n(clk_in1_n)
     );    // input clk_in1_n
 
-led# ( .CLK_FREQUENCY(CLK_FREQUENCY),
+led_PWM# ( .CLK_FREQUENCY(CLK_FREQUENCY),
     .BLINK_PERIOD (BLINK_PERIOD)) l0[1:0] (.i_clk(i_clk[0]),.i_rst(i_rst),.o_led(o_led));
 
 endmodule

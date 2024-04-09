@@ -26,7 +26,7 @@ module Sim
 //-- Constants
     localparam T_CLK = 1.0e9 / CLK_FREQUENCY; // ns
 //-- Signals
-    bit i_clk = 1'b0; bit i_rst = 1'b0; bit i_rst = 1'b0;
+    bit i_clk = 1'b0; bit i_rst = '0;
 //-- 
     Lab2top# ( .CLK_FREQUENCY(CLK_FREQUENCY),
     .BLINK_PERIOD (BLINK_PERIOD))
@@ -38,7 +38,9 @@ module Sim
     //.o_led ());
 //--
     always #(T_CLK/2) i_clk = ~i_clk;
-    initial begin i_rst = 1'b0;
-    #10e3 i_rst = 1'b0; #10000 i_rst = 1'b0; #10100 i_rst = 1'b0;
+    initial begin i_rst = '1;
+    //#10e3 i_rst = 1'b0;
+    //#10000 i_rst = 1'b1;
+    #250000 i_rst = '0;
     end
 endmodule
