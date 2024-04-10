@@ -26,7 +26,7 @@ module led
     parameter BLINK_PERIOD = 1 // секунды
 )
 (
-    input wire i_clk,
+    (* MARK_DEBUG="true" *) input wire i_clk,
     input wire i_rst, //!!!
     output logic [3:0] o_led = '0
 );
@@ -39,7 +39,7 @@ module led
     logic on_led=0;
     reg [COUNTER_WIDTH -1 : 0] counter_value = '0;
     always_ff @(posedge i_clk) begin
-        if (counter_value == COUNTER_PERIOD-1)
+        if (i_rst | counter_value == COUNTER_PERIOD-1)
             counter_value <= 0;
         else
             counter_value <= counter_value +1;
