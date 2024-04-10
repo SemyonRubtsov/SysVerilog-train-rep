@@ -22,13 +22,14 @@
 
 module led_4
 #(
+    parameter OUT_WIDTH = 1, // Num
     parameter CLK_FREQUENCY = 200000000, // Гц
     parameter BLINK_PERIOD = 1 // секунды
 )
 (
     (* MARK_DEBUG="true" *) input wire i_clk,
     input wire i_rst, //!!!
-    output logic [3:0] o_led = '0
+    output logic [OUT_WIDTH:0] o_led = '0
 );
 
 //-- Constants
@@ -49,9 +50,11 @@ module led_4
         else
             on_led <= 1;
         //o_led[3:1]<=on_led * 3'b111;
-        o_led[3:1]<=on_led ? '1 : '0;
+        //o_led[3:0]<=on_led ? '1 : '0;
         //o_led[3:1] <= {$size(o_led[3:1]){on_led}};
-        o_led[0] <= !on_led;
+        //o_led[0] <= !on_led;
+        
+        o_led[OUT_WIDTH:0]<=on_led;
         
         //assign o_led = {0:(~i_rst | on_led), default:(~i_rst | ~on_led)};
     end

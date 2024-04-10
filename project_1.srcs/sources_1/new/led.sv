@@ -22,8 +22,9 @@
 
 module led
 #(
-    parameter CLK_FREQUENCY = 200000000, // Гц
-    parameter BLINK_PERIOD = 1 // секунды
+    parameter OUT_WIDTH = 1, // Num
+    parameter CLK_FREQUENCY = 200000000, // Hz
+    parameter BLINK_PERIOD = 1 // seconds
 )
 (
     (* MARK_DEBUG="true" *) input wire i_clk,
