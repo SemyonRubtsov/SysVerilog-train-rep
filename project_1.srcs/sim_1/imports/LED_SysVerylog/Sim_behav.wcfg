@@ -11,30 +11,31 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="98.706166 us"></ZoomStartTime>
-      <ZoomEndTime time="470.206167 us"></ZoomEndTime>
-      <Cursor1Time time="408.289500 us"></Cursor1Time>
+      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
+      <ZoomEndTime time="1,518.000001 us"></ZoomEndTime>
+      <Cursor1Time time="54.000000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="237"></NameColumnWidth>
+      <NameColumnWidth column_width="221"></NameColumnWidth>
       <ValueColumnWidth column_width="60"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="9" />
+   <WVObjectSize size="15" />
    <wvobject type="logic" fp_name="/Sim/i_clk">
       <obj_property name="ElementShortName">i_clk</obj_property>
       <obj_property name="ObjectShortName">i_clk</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/Sim/i_rst">
-      <obj_property name="ElementShortName">i_rst</obj_property>
-      <obj_property name="ObjectShortName">i_rst</obj_property>
+   <wvobject type="array" fp_name="/Sim/i_rst">
+      <obj_property name="ElementShortName">i_rst[1:0]</obj_property>
+      <obj_property name="ObjectShortName">i_rst[1:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject type="other" fp_name="/Sim/CLK_FREQUENCY">
-      <obj_property name="ElementShortName">CLK_FREQUENCY</obj_property>
-      <obj_property name="ObjectShortName">CLK_FREQUENCY</obj_property>
+   <wvobject type="array" fp_name="/Sim/CLK_FREQUENCY">
+      <obj_property name="ElementShortName">CLK_FREQUENCY[31:0]</obj_property>
+      <obj_property name="ObjectShortName">CLK_FREQUENCY[31:0]</obj_property>
    </wvobject>
-   <wvobject type="other" fp_name="/Sim/BLINK_PERIOD">
-      <obj_property name="ElementShortName">BLINK_PERIOD</obj_property>
-      <obj_property name="ObjectShortName">BLINK_PERIOD</obj_property>
+   <wvobject type="array" fp_name="/Sim/BLINK_PERIOD">
+      <obj_property name="ElementShortName">BLINK_PERIOD[3:0]</obj_property>
+      <obj_property name="ObjectShortName">BLINK_PERIOD[3:0]</obj_property>
    </wvobject>
    <wvobject type="other" fp_name="/Sim/T_CLK">
       <obj_property name="ElementShortName">T_CLK</obj_property>
@@ -48,13 +49,36 @@
       <obj_property name="ElementShortName">clk_in1_n</obj_property>
       <obj_property name="ObjectShortName">clk_in1_n</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/Sim/UUT_2/\l0[0] /o_led">
+   <wvobject type="logic" fp_name="/Sim/UUT_2/o_m_led">
+      <obj_property name="ElementShortName">o_m_led</obj_property>
+      <obj_property name="ObjectShortName">o_m_led</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Sim/UUT_2/o_led">
       <obj_property name="ElementShortName">o_led[3:0]</obj_property>
       <obj_property name="ObjectShortName">o_led[3:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/Sim/UUT_2/\l0[1] /on_led">
+   <wvobject type="logic" fp_name="/Sim/UUT_2/\genblk1[0].l0 /on_led">
       <obj_property name="ElementShortName">on_led</obj_property>
       <obj_property name="ObjectShortName">on_led</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Sim/UUT_2/\genblk1[1].l0 /on_led">
+      <obj_property name="ElementShortName">on_led</obj_property>
+      <obj_property name="ObjectShortName">on_led</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Sim/UUT_2/\genblk1[2].l0 /on_led">
+      <obj_property name="ElementShortName">on_led</obj_property>
+      <obj_property name="ObjectShortName">on_led</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Sim/UUT_2/\genblk1[3].l0 /on_led">
+      <obj_property name="ElementShortName">on_led</obj_property>
+      <obj_property name="ObjectShortName">on_led</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/Sim/UUT_2/Mp/o_f">
+      <obj_property name="ElementShortName">o_f</obj_property>
+      <obj_property name="ObjectShortName">o_f</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/Sim/UUT_2/Mp/i_x">
+      <obj_property name="ElementShortName">i_x[3:0]</obj_property>
+      <obj_property name="ObjectShortName">i_x[3:0]</obj_property>
    </wvobject>
 </wave_config>

@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 04/09/2024 10:05:48 PM
+// Create Date: 04/10/2024 10:12:32 PM
 // Design Name: 
-// Module Name: led
+// Module Name: led_4
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module led
+module led_4
 #(
     parameter CLK_FREQUENCY = 200000000, // Гц
     parameter BLINK_PERIOD = 1 // секунды
@@ -28,7 +28,7 @@ module led
 (
     (* MARK_DEBUG="true" *) input wire i_clk,
     input wire i_rst, //!!!
-    output logic on_led = '0
+    output logic [3:0] o_led = '0
 );
 
 //-- Constants
@@ -36,7 +36,7 @@ module led
     localparam COUNTER_WIDTH = int'($ceil($clog2(COUNTER_PERIOD +1)));
     
 //-- Counter
-    //logic on_led=0;
+    logic on_led=0;
     reg [COUNTER_WIDTH -1 : 0] counter_value = '0;
     always_ff @(posedge i_clk) begin
         if (i_rst | counter_value == COUNTER_PERIOD-1)
@@ -49,9 +49,9 @@ module led
         else
             on_led <= 1;
         //o_led[3:1]<=on_led * 3'b111;
-        //o_led[3:1]<=on_led ? '1 : '0;
+        o_led[3:1]<=on_led ? '1 : '0;
         //o_led[3:1] <= {$size(o_led[3:1]){on_led}};
-        //o_led[0] <= !on_led;
+        o_led[0] <= !on_led;
         
         //assign o_led = {0:(~i_rst | on_led), default:(~i_rst | ~on_led)};
     end

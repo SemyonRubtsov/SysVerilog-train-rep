@@ -3,15 +3,15 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 04/01/2024 08:04:13 PM
+// Create Date: 04/10/2024 10:15:34 PM
 // Design Name: 
-// Module Name: top
+// Module Name: MUX_LED_Top
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
 // Description: 
 // 
-// Dependencies: bv
+// Dependencies: 
 // 
 // Revision:
 // Revision 0.01 - File Created
@@ -19,20 +19,23 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module Lab2top
+
+module MUX_LED_Top
 #(
     parameter CLK_FREQUENCY = 200000000, // Гц
-    parameter BLINK_PERIOD = 1 // секунды
+    parameter real BLINK_PERIOD [3:0] = {2, 1 , 0.5, 0.25} // секунды
 )
 (
     input wire clk_in1_p,
     input wire clk_in1_n,
-    (* MARK_DEBUG="true" *) input wire [1:0] i_rst,
-    (* MARK_DEBUG="true" *) output logic [7:0] o_led
+    input wire [1:0] i_rst,
+    output wire [3:0] o_led
     //output wire i_clk
 );
 
 wire i_clk;
+
+wire [3:0] o_m_led;
 
 clk_wiz_0 instance_name
    (
@@ -46,8 +49,16 @@ clk_wiz_0 instance_name
     .clk_in1_n(clk_in1_n)
     );    // input clk_in1_n
 
-led_4# ( .CLK_FREQUENCY(CLK_FREQUENCY),
-    .BLINK_PERIOD (BLINK_PERIOD)) l0[1:0] (.i_clk(i_clk),.i_rst(i_rst),.o_led(o_led));
+Lab1Multiplexor Mp (.i_x(o_m_led),.i_sel(i_rst),.o_f(w_led));
+
+assign o_led='{default:w_led};
+
+genvar i;
+
+generate for (i=0;i<=3;i++) begin
+led# ( .CLK_FREQUENCY(CLK_FREQUENCY),
+    .BLINK_PERIOD (BLINK_PERIOD[i])) l0 (.i_clk(i_clk),.on_led(o_m_led[i]));
+end
+endgenerate
 
 endmodule
-

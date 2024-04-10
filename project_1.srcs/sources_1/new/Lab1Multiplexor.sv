@@ -22,7 +22,7 @@
 
 module Lab1Multiplexor(
         input logic [3:0] i_x,
-        input logic [1:0] i_sel,
+        input wire [1:0] i_sel,
         output logic o_f
     );
 always @ (*) begin
