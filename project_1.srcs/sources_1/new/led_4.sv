@@ -49,12 +49,14 @@ module led_4
             on_led <= 0;
         else
             on_led <= 1;
-        //o_led[3:1]<=on_led * 3'b111;
-        //o_led[3:0]<=on_led ? '1 : '0;
-        //o_led[3:1] <= {$size(o_led[3:1]){on_led}};
-        //o_led[0] <= !on_led;
         
-        o_led[OUT_WIDTH:0]<=on_led;
+        if (OUT_WIDTH>=4) begin
+        //o_led[3:1]<=on_led * 3'b111;
+        o_led[3:0]<=on_led ? '1 : '0;
+        //o_led[3:1] <= {$size(o_led[3:1]){on_led}};
+        o_led[0] <= !on_led;
+        end
+        else o_led[OUT_WIDTH:0]<=on_led;
         
         //assign o_led = {0:(~i_rst | on_led), default:(~i_rst | ~on_led)};
     end
