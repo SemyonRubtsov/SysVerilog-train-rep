@@ -18,12 +18,12 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-//GOIDA2
+
 
 module MUX_LED_Top
 #(
     parameter CLK_FREQUENCY = 200000000, // Гц
-    parameter real BLINK_PERIOD [3:0] = {2, 1 , 0.5, 0.25} // секунды
+    parameter bit [3:0][31:0] BLINK_PERIOD  = '{32'd200_000_000, 32'd100_000_000 , 32'd50_000_000, 32'd25_000_000} // секунды
 )
 (
     input wire clk_in1_p,
@@ -53,12 +53,8 @@ Lab1Multiplexor Mp (.i_x(o_m_led),.i_sel(i_rst),.o_f(w_led));
 
 assign o_led='{default:w_led};
 
-genvar i;
-
-generate for (i=0;i<=3;i++) begin
+//for (i=0;i<=3;)
 led# ( .CLK_FREQUENCY(CLK_FREQUENCY),
-    .BLINK_PERIOD (BLINK_PERIOD[i])) l0 (.i_clk(i_clk),.on_led(o_m_led[i]));
-end
-endgenerate
+    .BLINK_PERIOD(BLINK_PERIOD)) l0[3:0] (.i_clk(i_clk),.on_led(o_m_led));
 
 endmodule

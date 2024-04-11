@@ -22,9 +22,9 @@
 
 module led
 #(
-    parameter OUT_WIDTH = 1, // Num
+    //parameter OUT_WIDTH = 1, // Num
     parameter CLK_FREQUENCY = 200000000, // Hz
-    parameter BLINK_PERIOD = 1 // seconds
+    parameter BLINK_PERIOD = 1 // nanoseconds
 )
 (
     (* MARK_DEBUG="true" *) input wire i_clk,
@@ -33,7 +33,7 @@ module led
 );
 
 //-- Constants
-    localparam COUNTER_PERIOD = int'(BLINK_PERIOD * CLK_FREQUENCY);
+    localparam COUNTER_PERIOD = int'(BLINK_PERIOD/1e9 * CLK_FREQUENCY);
     localparam COUNTER_WIDTH = int'($ceil($clog2(COUNTER_PERIOD +1)));
     
 //-- Counter

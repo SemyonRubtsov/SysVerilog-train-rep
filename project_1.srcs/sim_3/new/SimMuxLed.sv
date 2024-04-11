@@ -23,14 +23,14 @@
 module SimMuxLed
 #(
     parameter CLK_FREQUENCY = 200000000,
-    parameter real BLINK_PERIOD [3:0] = {0.002, 0.001 , 0.0005, 0.00025} // секунды
+    parameter bit [3:0][31:0] BLINK_PERIOD = {32'd200_000_000, 32'd100_000_000 , 32'd50_000_000, 32'd25_000_000}
 );
 //-- Constants
     localparam T_CLK = 1.0e9 / CLK_FREQUENCY; // ns
 //-- Signals
     bit i_clk = 1'b0; logic [1:0] i_rst = '0;
 //-- 
-    Lab2top# ( .CLK_FREQUENCY(CLK_FREQUENCY),
+    MUX_LED_Top# ( .CLK_FREQUENCY(CLK_FREQUENCY),
     .BLINK_PERIOD (BLINK_PERIOD))
     UUT_2 (
     .clk_in1_p (i_clk),
