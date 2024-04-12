@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 04/10/2024 10:15:34 PM
+// Create Date: 04/12/2024 06:15:34 PM
 // Design Name: 
-// Module Name: MUX_LED_Top
+// Module Name: lab2b_top
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module MUX_LED_Top
+module lab2b_top
 #(
     parameter CLK_FREQUENCY = 200000000, // Гц
     parameter real BLINK_PERIOD [3:0] = {2, 1 , 0.5, 0.25} // секунды
@@ -49,15 +49,16 @@ clk_wiz_0 instance_name
     .clk_in1_n(clk_in1_n)
     );    // input clk_in1_n
 
-Lab1Multiplexor Mp (.i_x(o_m_led),.i_sel(i_rst),.o_f(w_led));
+lab1_mux #(.INPUT_WIDTH(4)) u_mux (.i_x(o_m_led),.i_sel(i_rst),.o_f(w_led));
 
 assign o_led='{default:w_led};
 
 genvar i;
 
 generate for (i=0;i<=3;i++) begin
-led# ( .CLK_FREQUENCY(CLK_FREQUENCY),
-    .BLINK_PERIOD (BLINK_PERIOD[i])) l0 (.i_clk(i_clk),.on_led(o_m_led[i]));
+lab2_led_n# ( .CLK_FREQUENCY(CLK_FREQUENCY),
+    .BLINK_PERIOD (BLINK_PERIOD[i]),
+    .OUT_WIDTH(1)) l0 (.i_clk(i_clk),.o_led(o_m_led[i]));
 end
 endgenerate
 

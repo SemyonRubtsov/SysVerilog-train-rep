@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 04/04/2024 08:54:43 PM
+// Create Date: 04/12/2024 07:38:58 PM
 // Design Name: 
-// Module Name: Multiplexor_tb
+// Module Name: tb_lab1_top
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,15 +20,15 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Multi_tb
+module tb_lab1_top
 #(
-    parameter CLK_FREQUENCY = 200000000
+    parameter INPUT_WIDTH=4
 );
     localparam T_CLK = 20; // ns
     
     logic [3:0]i_x = '0; logic[1:0] i_sel = 0;
     
-    Lab1Multiplexor m0 (.i_x(i_x), .i_sel(i_sel));
+    lab1_top#(.INPUT_WIDTH(INPUT_WIDTH)) u_mux_top (.i_x(i_x), .i_sel(i_sel));
     
     always #(T_CLK/2) i_x[3] <= !i_x[3];
     
@@ -41,4 +41,3 @@ module Multi_tb
     always #(8*T_CLK) i_sel [1:0] = i_sel [1:0]+1;
     
 endmodule
-

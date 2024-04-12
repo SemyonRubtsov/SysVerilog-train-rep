@@ -91,15 +91,16 @@
 //
 //endmodule
 
-module led_PWM
+module lab2_led_PWM
 #(
     parameter CLK_FREQUENCY = 200000000, // Гц
-    parameter BLINK_PERIOD = 3 // секунды
+    parameter BLINK_PERIOD = 3, // секунды
+    parameter OUT_WIDTH=1
 )
 (
     input wire i_clk,
     input wire i_rst, //!!!
-    output logic [3:0] o_led = '0
+    output logic [OUT_WIDTH-1:0] o_led = '0
 );
 
 //-- Constants
@@ -165,7 +166,7 @@ module led_PWM
         //    on_led <= 1;
         
         //o_led[3:1]<=on_led * 3'b111;
-        o_led[3:1]<=on_led ? '1 : '0;
+        o_led[OUT_WIDTH-1:1]<=on_led ? '1 : '0;
         //o_led[3:1] <= {$size(o_led[3:1]){on_led}};
         o_led[0] <= !on_led;
     end

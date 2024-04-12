@@ -3,15 +3,15 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 04/01/2024 08:04:13 PM
+// Create Date: 04/12/2024 06:15:34 PM
 // Design Name: 
-// Module Name: top
+// Module Name: lab2b_top
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
 // Description: 
 // 
-// Dependencies: bv
+// Dependencies: 
 // 
 // Revision:
 // Revision 0.01 - File Created
@@ -19,10 +19,11 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module Lab2top
+
+module lab2a_top
 #(
     parameter CLK_FREQUENCY = 200000000, // Гц
-    parameter BLINK_PERIOD = 1 // секунды
+    parameter BLINK_PERIOD = 1 // секунд
 )
 (
     input wire clk_in1_p,
@@ -46,8 +47,8 @@ clk_wiz_0 instance_name
     .clk_in1_n(clk_in1_n)
     );    // input clk_in1_n
 
-led_4# ( .CLK_FREQUENCY(CLK_FREQUENCY),
-    .BLINK_PERIOD (BLINK_PERIOD)) l0[1:0] (.i_clk(i_clk),.i_rst(i_rst),.o_led(o_led));
+lab2_led_n# ( .CLK_FREQUENCY(CLK_FREQUENCY),
+    .BLINK_PERIOD (BLINK_PERIOD),
+    .OUT_WIDTH(4)) l0[1:0] (.i_clk(i_clk),.i_rst(i_rst),.o_led(o_led));
 
 endmodule
-
