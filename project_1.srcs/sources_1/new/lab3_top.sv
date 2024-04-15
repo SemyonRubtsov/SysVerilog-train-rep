@@ -30,12 +30,17 @@ module lab3_top(
     output reg [1:0] i_Lb
     );
     
+    localparam N=32;
+    reg [int'($ceil($clog2(N +1)))-1:0] cnt ='0;
+    
     enum logic [3:0] {S0 = 4'b0001,
                      S1 = 4'b0010,
                      S2 = 4'b0100,
                      S3 = 4'b1000} S;
 
-    always @(posedge i_clk)
+    always @(posedge i_clk) begin
+        if (cnt<N)
+            cnt<=cnt + 1;
         if (i_rst) begin
             S <= S0;
             i_La <= 2'b00;
@@ -44,47 +49,29 @@ module lab3_top(
         else
             case (S)
                 S0 : begin
-                    if (~i_Ta)
+                    if ((~i_Ta | cnt>=N-1) & i_Tb) begin
                        S <= S1;
-//                    else if (<condition>)
-//                       <state> <= <next_state>;
-//                    else
-//                       <state> <= <next_state>;
+                       cnt <= 0; end
                     i_La <= 2'b00;
                     i_Lb <= 2'b10;
                 end
                 S1 : begin
                     S<=S2;
-//                    if (<condition>)
-//                       <state> <= <next_state>;
-//                    else if (<condition>)
-//                       <state> <= <next_state>;
-//                    else
-//                       <state> <= <next_state>;
                     i_La <= 2'b01;
-                    i_Lb <= 2'b10;
+                    i_Lb <= 2'b01;
                 end
                 S2 : begin
-                    if (~i_Tb)
+                    if ((~i_Tb | cnt>=N-1) & i_Ta) begin
                        S <= S3;
-//                    else if (<condition>)
-//                       <state> <= <next_state>;
-//                    else
-//                       <state> <= <next_state>;
+                       cnt <= 0; end
                     i_La <= 2'b10;
                     i_Lb <= 2'b00;
                 end
                 S3: begin
                     S <= S0;
-//                    if (<condition>)
-//                       <state> <= <next_state>;
-//                    else if (<condition>)
-//                       <state> <= <next_state>;
-//                    else
-//                       <state> <= <next_state>;
-                    i_La <= 2'b10;
+                    i_La <= 2'b01;
                     i_Lb <= 2'b01;
                 end
             endcase
-        
+        end
 endmodule
