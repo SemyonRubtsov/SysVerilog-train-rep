@@ -26,51 +26,49 @@ module lab3_top(
     input i_rst,
     input i_Ta,
     input i_Tb,
-    output reg [1:0] i_La,
-    output reg [1:0] i_Lb
+    output reg [2:0] o_La,
+    output reg [2:0] o_Lb
     );
     
-    localparam N=32;
+    logic dir=1;
+    
+    localparam N=32;//1*200_000_000;
     reg [int'($ceil($clog2(N +1)))-1:0] cnt ='0;
     
-    enum logic [3:0] {S0 = 4'b0001,
-                     S1 = 4'b0010,
-                     S2 = 4'b0100,
-                     S3 = 4'b1000} S;
+    enum logic [1:0] {S0 = 4'b0,
+                     S1 = 4'b1} S;
 
     always @(posedge i_clk) begin
         if (cnt<N)
             cnt<=cnt + 1;
         if (i_rst) begin
             S <= S0;
-            i_La <= 2'b00;
-            i_Lb <= 2'b10;
+            o_La = 3'b001;
+            o_Lb = 3'b100;
         end
         else
             case (S)
                 S0 : begin
-                    if ((~i_Ta | cnt>=N-1) & i_Tb) begin
+                    if ((i_Ta & !o_La[0] | i_Tb & !o_Lb[0]) & cnt>=N-1) begin
                        S <= S1;
-                       cnt <= 0; end
-                    i_La <= 2'b00;
-                    i_Lb <= 2'b10;
+                       cnt <= 0;
+                       if (dir) begin
+                       o_La=o_La<<<1;
+                       o_Lb=o_Lb>>>1;end
+                       else begin
+                       o_La=o_La>>>1;
+                       o_Lb=o_Lb<<<1;end
+                    end
                 end
                 S1 : begin
-                    S<=S2;
-                    i_La <= 2'b01;
-                    i_Lb <= 2'b01;
-                end
-                S2 : begin
-                    if ((~i_Tb | cnt>=N-1) & i_Ta) begin
-                       S <= S3;
-                       cnt <= 0; end
-                    i_La <= 2'b10;
-                    i_Lb <= 2'b00;
-                end
-                S3: begin
-                    S <= S0;
-                    i_La <= 2'b01;
-                    i_Lb <= 2'b01;
+                    S<=S0;
+                    if (dir) begin
+                       o_La=o_La<<<1;
+                       o_Lb=o_Lb>>>1;end
+                       else begin
+                       o_La=o_La>>>1;
+                       o_Lb=o_Lb<<<1;end
+                    dir=!dir;
                 end
             endcase
         end
