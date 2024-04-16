@@ -20,7 +20,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-
 module lab3_top(
     input i_clk,
     input i_rst,
@@ -32,7 +31,7 @@ module lab3_top(
     
     logic dir=1;
     
-    localparam N=32;//1*200_000_000;
+    localparam N=512;//1*200_000_000;
     reg [int'($ceil($clog2(N +1)))-1:0] cnt ='0;
     
     enum logic [1:0] {S0 = 4'b0,
@@ -43,8 +42,8 @@ module lab3_top(
             cnt<=cnt + 1;
         if (i_rst) begin
             S <= S0;
-            o_La = 3'b001;
-            o_Lb = 3'b100;
+            o_La <= 3'b001;
+            o_Lb <= 3'b100;
         end
         else
             case (S)
@@ -52,24 +51,27 @@ module lab3_top(
                     if ((i_Ta & !o_La[0] | i_Tb & !o_Lb[0]) & cnt>=N-1) begin
                        S <= S1;
                        cnt <= 0;
-                       if (dir) begin
-                       o_La=o_La<<<1;
-                       o_Lb=o_Lb>>>1;end
-                       else begin
-                       o_La=o_La>>>1;
-                       o_Lb=o_Lb<<<1;end
+                       light_switch(dir);
                     end
                 end
                 S1 : begin
-                    S<=S0;
-                    if (dir) begin
-                       o_La=o_La<<<1;
-                       o_Lb=o_Lb>>>1;end
-                       else begin
-                       o_La=o_La>>>1;
-                       o_Lb=o_Lb<<<1;end
-                    dir=!dir;
+                    if (cnt>=N/4-1) begin
+                        S<=S0;
+                        cnt <= 0;
+                        light_switch(dir);
+                        dir=!dir;
+                    end
                 end
             endcase
         end
+        
+    function void light_switch(dir);
+        if (dir) begin
+            o_La<=o_La<<<1;
+            o_Lb<=o_Lb>>>1;end
+            else begin
+            o_La<=o_La>>>1;
+            o_Lb<=o_Lb<<<1;end
+    endfunction : light_switch
+
 endmodule

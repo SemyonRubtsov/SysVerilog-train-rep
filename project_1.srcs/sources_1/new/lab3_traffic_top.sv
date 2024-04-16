@@ -38,7 +38,7 @@ module lab3_traffic_top(
     // Clock out ports
     .clk_out1(m_clk),     // output clk_out1
     // Status and control signals
-    //.reset(i_rst), // input reset
+    .reset('0), // input reset
     .locked(locked),       // output locked
    // Clock in ports
     .clk_in1_p(clk_in1_p),    // input clk_in1_p
