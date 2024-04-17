@@ -34,8 +34,8 @@ module tb_lab3_top(
     
     always #(5e2) i_clk = ~i_clk;
     
-    always #(2.5e4) i_Ta = ~i_Ta;
-    always #(7.1e4) i_Tb = ~i_Tb;
+    always #(2.5e6) i_Ta = ~i_Ta;
+    always #(7.1e6) i_Tb = ~i_Tb;
     
     initial begin i_rst = '0;
     
