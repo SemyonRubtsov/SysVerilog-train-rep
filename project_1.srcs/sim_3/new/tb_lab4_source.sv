@@ -53,7 +53,7 @@ module tb_lab4_source
     
 );
     
-    logic i_clk='0;logic i_rst='0;logic i_tready='1;
+    logic i_clk='0;logic i_rst='0;logic i_tready='1; logic tmp1='1;logic tmp2='0;
     if_axis m_axis();
     
     lab4_source u_src(
@@ -64,8 +64,11 @@ module tb_lab4_source
     );
     
     always #(T_CLK/2) i_clk = ~i_clk;
+    always #(T_CLK*2.3e2) tmp1 = ~tmp1;
+    always #(T_CLK*1.9e1) tmp2 = ~tmp2;
+    always #(T_CLK*13) m_axis.tready = tmp2 & tmp1;
     initial begin
-    m_axis.tready='1;
+    #47 m_axis.tready='1;
     #10 i_rst='1;
     #16 i_rst='0;
     end

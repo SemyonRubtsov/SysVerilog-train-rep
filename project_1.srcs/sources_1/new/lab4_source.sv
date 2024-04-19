@@ -106,6 +106,9 @@ module lab4_source
         //m_shift<=
         //m_shift<={m_shift[SHIFT-2:0],o_crc_res_dat};
         
+        //m_axis.tvalid<=m_axis.tready ? '1 : '0;
+        //m_wrd_vld<=m_axis.tready ? '1 : '0;
+        
         if (i_rst) begin
             S <= S0;
             cnt=0;
@@ -152,11 +155,16 @@ module lab4_source
                     end
                 end
                 S3:begin //send data
+                    
                     if (m_axis.tready & !m_axis.tvalid) begin
                         m_axis.tvalid <= '1;
                         m_wrd_vld<=1;
                     end
-                    if (cnt<P_LEN) begin
+                    //else m_wrd_vld<=0;
+                    //m_axis.tvalid<=m_axis.tready ? '1 : '0;
+                    m_wrd_vld<=m_axis.tready ? '1 : '0;
+                    
+                    if (m_axis.tready & cnt<P_LEN) begin
                         m_axis.tdata  <= cnt+1;
                         i_crc_wrd_dat <= cnt+1;
                         cnt<=cnt+1;
@@ -191,7 +199,7 @@ module lab4_source
                 end
                 S6:begin
                     //m_crc_rst='1;
-                    if (cnt<P_LEN)
+                    if (m_axis.tready & cnt<P_LEN)
                         cnt=cnt+1;
                     else
                         S<=S0;

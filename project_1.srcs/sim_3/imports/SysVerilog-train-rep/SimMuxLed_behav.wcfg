@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="23.200 ns"></ZoomStartTime>
-      <ZoomEndTime time="62.551 ns"></ZoomEndTime>
-      <Cursor1Time time="40.500 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,582.001 ns"></ZoomEndTime>
+      <Cursor1Time time="605.400 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="179"></NameColumnWidth>
-      <ValueColumnWidth column_width="74"></ValueColumnWidth>
+      <ValueColumnWidth column_width="70"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="7" />
+   <WVObjectSize size="11" />
    <wvobject type="array" fp_name="/tb_lab4_source/u_src/S">
       <obj_property name="ElementShortName">S[3:0]</obj_property>
       <obj_property name="ObjectShortName">S[3:0]</obj_property>
@@ -38,16 +38,34 @@
       <obj_property name="ObjectShortName">o_crc_res_dat[7:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab4_source/u_src/m_axis_tvalid">
-      <obj_property name="ElementShortName">m_axis_tvalid</obj_property>
-      <obj_property name="ObjectShortName">m_axis_tvalid</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab4_source/u_src/m_axis_tlast">
-      <obj_property name="ElementShortName">m_axis_tlast</obj_property>
-      <obj_property name="ObjectShortName">m_axis_tlast</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/tb_lab4_source/u_src/m_axis/tdata">
+   <wvobject type="array" fp_name="/tb_lab4_source/m_axis/m/tdata">
       <obj_property name="ElementShortName">tdata[7:0]</obj_property>
       <obj_property name="ObjectShortName">tdata[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_source/m_axis/m/tvalid">
+      <obj_property name="ElementShortName">tvalid</obj_property>
+      <obj_property name="ObjectShortName">tvalid</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_source/m_axis/m/tlast">
+      <obj_property name="ElementShortName">tlast</obj_property>
+      <obj_property name="ObjectShortName">tlast</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_source/m_axis/m/tready">
+      <obj_property name="ElementShortName">tready</obj_property>
+      <obj_property name="ObjectShortName">tready</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_source/u_src/u_crc/i_crc_wrd_vld">
+      <obj_property name="ElementShortName">i_crc_wrd_vld</obj_property>
+      <obj_property name="ObjectShortName">i_crc_wrd_vld</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_source/tmp1">
+      <obj_property name="ElementShortName">tmp1</obj_property>
+      <obj_property name="ObjectShortName">tmp1</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_source/tmp2">
+      <obj_property name="ElementShortName">tmp2</obj_property>
+      <obj_property name="ObjectShortName">tmp2</obj_property>
    </wvobject>
 </wave_config>
