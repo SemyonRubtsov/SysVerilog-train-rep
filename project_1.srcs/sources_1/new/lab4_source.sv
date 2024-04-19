@@ -19,28 +19,44 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+interface if_axis #(parameter int N = 1) ();
+	localparam W = 8 * N; // TDATA bit width (N - number of bytes)
+	
+	logic         tready;
+	logic         tvalid;
+	logic         tlast ;
+	logic [W-1:0] tdata ;
+	
+	modport m (input tready, output tvalid, tlast, tdata);
+	modport s (output tready, input tvalid, tlast, tdata);
+	
+endinterface : if_axis
 
 module lab4_source
 #(
-parameter G_BYT = 1,
-parameter P_LEN = 10,
-parameter CRC_WAIT=10
+    parameter G_BYT = 1,
+    parameter P_LEN = 10,
+    parameter CRC_WAIT=1,
+    parameter SHIFT=10
 )
 (
     input logic i_clk,                                                                 
     input logic i_rst,                                                              
     //input i_snd,
-                                                                               
-    output logic m_axis_tvalid,            // output wire m_axis_tvalid       
-    input logic m_axis_tready,            // input wire m_axis_tready        
-    output reg [7:0] m_axis_tdata,              // output wire [7 : 0] m_axis_tdata
-    output logic m_axis_tlast              // output wire m_axis_tlast         
-    );
+    
+    if_axis.m m_axis
+                                                                             
+    //output logic m_axis_tvalid,            // output wire m_axis_tvalid       
+    //input logic m_axis_tready,            // input wire m_axis_tready        
+    //output reg [7:0] m_axis_tdata,              // output wire [7 : 0] m_axis_tdata
+    //output logic m_axis_tlast              // output wire m_axis_tlast         
+);
     
     localparam PACKET_WIDTH=int'($ceil($clog2(P_LEN+1)));
     
-    if_axis #(.N(G_BYT)) m_axis();
+    //if_axis #(.N(G_BYT)) m_axis();
     reg [PACKET_WIDTH -1 :0] cnt;
+    //reg [SHIFT-1:0][7:0] m_shift='0;
     // send packet to AXIS FIFO
     
     logic [G_BYT*8-1:0] o_crc_res_dat='0;
@@ -53,7 +69,7 @@ parameter CRC_WAIT=10
 		.WORD_WIDTH (8), // Size of The Input Words Vector
 		.WORD_COUNT (0   ), // Number of Words To Calculate CRC, 0 - Always Calculate CRC On Every Input Word
 		.POLYNOMIAL ('hD5), // Polynomial Bit Vector
-		.INIT_VALUE ('1  ), // Initial Value
+		.INIT_VALUE ('h01), // Initial Value
 		.CRC_REF_IN ('0  ), // Beginning and Direction of Calculations: 0 - Starting With MSB-First; 1 - Starting With LSB-First
 		.CRC_REFOUT ('0  ), // Determines Whether The Inverted Order of The Bits of The Register at The Entrance to The Xor Element
 		.BYTES_RVRS ('0  ), // Input Word Byte Reverse
@@ -80,13 +96,15 @@ parameter CRC_WAIT=10
                      S6 = 3'b111} S;
     
     task make_valid;
-    if (m_axis_tready & !m_axis_tvalid)
-        m_axis_tvalid <= '1;
+    if (m_axis.tready & !m_axis.tvalid)
+        m_axis.tvalid <= '1;
     endtask
     
     always_ff @(posedge i_clk) begin
         
         //if i<P_LEN
+        //m_shift<=
+        //m_shift<={m_shift[SHIFT-2:0],o_crc_res_dat};
         
         if (i_rst) begin
             S <= S0;
@@ -97,70 +115,76 @@ parameter CRC_WAIT=10
             case(S)
                 S0:begin
                     
-                    if (m_axis_tready)
+                    if (m_axis.tready) begin
                         S <= S1;
-                        m_axis_tvalid <= '0;
-                        
+                        m_axis.tvalid <= '0;   
+                     end   
                 end
                 S1:begin
-                    if (m_axis_tready & !m_axis_tvalid) m_axis_tvalid <= '1;
-                        
+                    if (m_axis.tready & !m_axis.tvalid) begin
+                        m_axis.tvalid <= '1;
+                        m_axis.tlast <= '0;
+                    end
+                    
                     m_axis.tdata  <= 72;
+                    //i_crc_wrd_dat <= 72;
                     m_crc_rst='1;
                     
-                    if (m_axis_tvalid & m_axis_tready) begin
+                    if (m_axis.tvalid & m_axis.tready) begin
                         S <= S2;
-                        m_axis_tvalid <= '0;
+                        m_axis.tvalid <= '0;
                         cnt<='0;
                         m_crc_rst='0;
                     end
                 end
                 S2:begin
-                if (m_axis_tready & !m_axis_tvalid) m_axis_tvalid <= '1;
+                if (m_axis.tready & !m_axis.tvalid) m_axis.tvalid <= '1;
                         
                     m_axis.tdata  <= P_LEN;
+                    //i_crc_wrd_dat <= P_LEN;
                     
                     
-                    if (m_axis_tvalid & m_axis_tready) begin
+                    if (m_axis.tvalid & m_axis.tready) begin
                         S <= S3;
-                        m_axis_tvalid <= '0;
+                        m_axis.tvalid <= '0;
                         cnt<='0;
-                        m_wrd_vld<=1;
+                        
                     end
                 end
                 S3:begin //send data
-                    if (m_axis_tready & !m_axis_tvalid) m_axis_tvalid <= '1;
-                    
+                    if (m_axis.tready & !m_axis.tvalid) begin
+                        m_axis.tvalid <= '1;
+                        m_wrd_vld<=1;
+                    end
                     if (cnt<P_LEN) begin
-                        m_axis.tdata  <= cnt;
-                        i_crc_wrd_dat <= cnt;
+                        m_axis.tdata  <= cnt+1;
+                        i_crc_wrd_dat <= cnt+1;
                         cnt<=cnt+1;
                     end
                     
-                    if (m_axis_tvalid & m_axis_tready & cnt==P_LEN) begin
+                    if (m_axis.tvalid & m_axis.tready & cnt==P_LEN) begin
                         S <= S4;
-                        m_axis_tvalid <= '0;
+                        m_axis.tvalid <= '0;
+                        m_wrd_vld<=0;
                         cnt<='0;
                     end
                 end
                 S4:begin
-                    if (cnt<CRC_WAIT)
-                        cnt=cnt+1;
-                    else
-                        S<=S5;
-                        m_wrd_vld<=0;
+                    S<=S5;
+                    //m_wrd_vld<=0;
                 end
                 S5:begin
-                    if (m_axis_tready & !m_axis_tvalid) m_axis_tvalid <= '1;
-                    
+                    if (m_axis.tready & !m_axis.tvalid) begin
+                        m_axis.tvalid <= '1;
+                        m_axis.tlast <= '1;
+                    end
                     //Send CRC
                     
                     m_axis.tdata  <= o_crc_res_dat;
                         
-                    if (m_axis_tvalid & m_axis_tready) begin
+                    if (m_axis.tvalid & m_axis.tready) begin
                         S <= S6;
-                        m_axis_tvalid <= '0;
-                        m_axis_tlast <= '0;
+                        m_axis.tvalid <= '0;
                         cnt<='0;
                         
                     end

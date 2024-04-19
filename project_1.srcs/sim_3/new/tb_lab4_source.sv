@@ -19,27 +19,53 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
+//interface if_axis #(parameter int N = 1) ();
+//	localparam W = 8 * N; // TDATA bit width (N - number of bytes)
+	
+//	logic         tready;
+//	logic         tvalid;
+//	logic         tlast ;
+//	logic [W-1:0] tdata ;
+	
+//	modport m (input tready, output tvalid, tlast, tdata);
+//	modport s (output tready, input tvalid, tlast, tdata);
+	
+//endinterface
+
+interface if_axis #(parameter int N = 1) ();
+	localparam W = 8 * N; // TDATA bit width (N - number of bytes)
+	
+	logic         tready;
+	logic         tvalid;
+	logic         tlast ;
+	logic [W-1:0] tdata ;
+	
+	modport m (input tready, output tvalid, tlast, tdata);
+	modport s (output tready, input tvalid, tlast, tdata);
+	
+endinterface : if_axis
 
 module tb_lab4_source
 #(
-parameter T_CLK = 1.0 // ns
+    parameter T_CLK = 1.0 // ns
 )
 (
-
+    
 );
     
     logic i_clk='0;logic i_rst='0;logic i_tready='1;
+    if_axis m_axis();
     
     lab4_source u_src(
         .i_rst(i_rst),
         .i_clk(i_clk),
         
-        .m_axis_tready(i_tready)
+        .m_axis(m_axis)
     );
     
     always #(T_CLK/2) i_clk = ~i_clk;
     initial begin
-    i_tready='1;
+    m_axis.tready='1;
     #10 i_rst='1;
     #16 i_rst='0;
     end

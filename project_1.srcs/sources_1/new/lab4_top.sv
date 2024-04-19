@@ -19,14 +19,18 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-interface if_axis #(parameter int N = 1) ();
-	localparam W = 8 * N; // TDATA bit width (N - number of bytes)
+//interface if_axis #(parameter int N = 1) ();
+//	localparam W = 8 * N; // TDATA bit width (N - number of bytes)
 	
-	logic         tready;
-	logic         tvalid;
-	logic         tlast ;
-	logic [W-1:0] tdata ;
-endinterface
+//	logic         tready;
+//	logic         tvalid;
+//	logic         tlast ;
+//	logic [W-1:0] tdata ;
+	
+//	modport m (input tready, output tvalid, tlast, tdata);
+//	modport s (output tready, input tvalid, tlast, tdata);
+	
+//endinterface
 
 module lab4_top
 #(
