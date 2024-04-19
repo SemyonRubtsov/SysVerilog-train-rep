@@ -64,9 +64,9 @@ module tb_lab4_source
     );
     
     always #(T_CLK/2) i_clk = ~i_clk;
-    always #(T_CLK*2.3e2) tmp1 = ~tmp1;
-    always #(T_CLK*1.9e1) tmp2 = ~tmp2;
-    always #(T_CLK*13) m_axis.tready = tmp2 & tmp1;
+    always #(T_CLK*1.9e1) tmp1 = ~tmp1;
+    always #(T_CLK*2.7e1) tmp2 = ~tmp2;
+    assign m_axis.tready = tmp2 & tmp1;
     initial begin
     #47 m_axis.tready='1;
     #10 i_rst='1;
