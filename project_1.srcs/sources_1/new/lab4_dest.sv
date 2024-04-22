@@ -29,54 +29,102 @@ module lab4_dest#(
     input i_clk,
     input i_rst,
    
+    output logic err,
+   
     if_axis.s s_axis              // input wire s_axis_tlast
     
-    );
+);
     
     logic [G_BYT*8-1:0] o_crc_res_dat='0;
-    logic [G_BYT*8-1:0] i_crc_wrd_dat;
+    logic [G_BYT*8-1:0] i_crc_wrd_dat='0;
     logic m_wrd_vld='0;
     logic m_crc_rst='0;
+    logic m_receive;
     
+    reg [8:0] R_CRC='0;
+    reg [8:0] C_CRC='0;
     
+    crc #(
+        .POLY_WIDTH (8), // Size of The Polynomial Vector
+		.WORD_WIDTH (8), // Size of The Input Words Vector
+		.WORD_COUNT (0), // Number of Words To Calculate CRC, 0 - Always Calculate CRC On Every Input Word
+		.POLYNOMIAL ('hD5), // Polynomial Bit Vector
+		.INIT_VALUE ('h01), // Initial Value
+		//.CRC_REF_IN ('0), // Beginning and Direction of Calculations: 0 - Starting With MSB-First; 1 - Starting With LSB-First
+		//.CRC_REFOUT ('0), // Determines Whether The Inverted Order of The Bits of The Register at The Entrance to The Xor Element
+		//.BYTES_RVRS ('0) // Input Word Byte Reverse
+		.XOR_VECTOR ('0), // CRC Final Xor Vector
+		.NUM_STAGES (2)  // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3..NUM_STAGES(1) // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3.
+    ) g_crc (
+        .i_crc_a_clk_p(i_clk),
+        .i_crc_s_rst_p(s_axis.tlast),
+        .i_crc_ini_vld('0),
+        .i_crc_wrd_vld(m_receive),
+        .i_crc_ini_dat('0),
+        .i_crc_wrd_dat(s_axis.tdata),
+        .o_crc_wrd_rdy (),
+        .o_crc_res_vld (),
+        .o_crc_res_dat(o_crc_res_dat)
+    );
     
-//    crc #(
-//        .POLY_WIDTH (8), // Size of The Polynomial Vector
-//		.WORD_WIDTH (8), // Size of The Input Words Vector
-//		.WORD_COUNT (0   ), // Number of Words To Calculate CRC, 0 - Always Calculate CRC On Every Input Word
-//		.POLYNOMIAL ('hD5), // Polynomial Bit Vector
-//		.INIT_VALUE ('h01), // Initial Value
-//		.CRC_REF_IN ('0  ), // Beginning and Direction of Calculations: 0 - Starting With MSB-First; 1 - Starting With LSB-First
-//		.CRC_REFOUT ('0  ), // Determines Whether The Inverted Order of The Bits of The Register at The Entrance to The Xor Element
-//		.BYTES_RVRS ('0  ), // Input Word Byte Reverse
-//		.XOR_VECTOR ('0  ), // CRC Final Xor Vector
-//		.NUM_STAGES (2   )  // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3..NUM_STAGES(1) // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3.
-//    ) u_crc (
-//        .i_crc_a_clk_p(i_clk),
-//        .i_crc_s_rst_p(m_crc_rst),
-//        .i_crc_ini_vld('0),
-//        .i_crc_wrd_vld(m_wrd_vld),
-//        .i_crc_ini_dat('0),
-//        .i_crc_wrd_dat(i_crc_wrd_dat),
-//        .o_crc_wrd_rdy (),
-//        .o_crc_res_vld (),
-//        .o_crc_res_dat(o_crc_res_dat)
-//    );
+    enum logic [3:0] {S0 = 3'b001,
+                     S1 = 3'b010,
+                     S2 = 3'b011,
+                     S3 = 3'b100,
+                     S4 = 3'b101,
+                     S5 = 3'b110,
+                     S6 = 3'b111} S;
     
-    //assign i_crc_wrd_dat=s_axis.tdata;
+    //assign m_receive = s_axis.tvalid & !s_axis.tlast;
     
     always_ff @(posedge i_rst) begin
         s_axis.tready = '1;
+        //S<=S0;
+        //err<='0;
         //s_axis.tvalid = '0;
         //s_axis.tlast  = '0;
         //s_axis.tdata  = '0;
     end
     
-    assign i_crc_wrd_dat = s_axis.tdata;
+    //assign err = i_crc_wrd_dat;
+    //assign i_crc_wrd_dat = s_axis.tdata;
     
     always_ff @(posedge i_clk) begin
-    
+        
+        if (i_rst) S<=S0;
+        
+        if (s_axis.tlast) R_CRC<=s_axis.tdata;
+        //else cnt<=cnt+1;
+        //err<=s_axis.tdata[0];
+        
+        case(S)
+            S0: begin
+            
+                err<=(o_crc_res_dat==R_CRC) ? '1:'0;
+                
+                if (s_axis.tvalid) begin
+                   S <= S2;
+                   //m_axis.tvalid <= '0;   
+                end
+            end
+            S1: begin
+                if (s_axis.tvalid) begin
+                    S<=S2;
+                end
+            end
+            S2: begin
+                m_receive<=(s_axis.tvalid & !s_axis.tlast);
+                if (s_axis.tvalid & s_axis.tlast) begin
+                    S<=S0;
+                    m_receive<='0;
+                end
+            end
+        endcase 
+        
+        //m_wrd_vld <= (s_axis.tvalid & !s_axis.tlast) ? '1 : '0;
+        //cnt<=(cnt>=10) ? cnt<=cnt+1: cnt<='0;
+    end
         //s_axis.tready=~s_axis.tready;
     
-    end
+    //end
 endmodule

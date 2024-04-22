@@ -62,7 +62,7 @@ module lab4_source
     //reg [SHIFT-1:0][7:0] m_shift='0;
     // send packet to AXIS FIFO
     
-    logic [G_BYT*8-1:0] o_crc_res_dat='0;
+    logic [G_BYT*8-1:0] o_crc_res_dat;
     logic [G_BYT*8-1:0] i_crc_wrd_dat='0;
     logic m_wrd_vld='0;
     logic m_crc_rst='0;

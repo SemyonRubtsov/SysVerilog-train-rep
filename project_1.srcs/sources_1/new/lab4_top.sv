@@ -52,6 +52,13 @@ parameter G_BYT = 1
         .m_axis(src_fifo)             // output wire m_axis_tlast
     );
     
+    lab4_dest u_dst(
+        .i_clk(i_clk),
+        .i_rst(i_rst[2]),
+        
+        .s_axis(fifo_dst)
+    );
+    
     axis_data_fifo_0 u_fifo (
         .s_axis_aresetn(~i_rst[1]),          // input wire s_axis_aresetn
         .s_axis_aclk(i_clk),                // input wire s_axis_aclk
@@ -72,10 +79,4 @@ parameter G_BYT = 1
         .prog_full(prog_full)                    // output wire prog_full
     );
     
-    lab4_dest u_dst(
-        .i_clk(i_clk),   
-        .i_rst(i_rst[2]),
-        
-        .s_axis(fifo_dst)
-    );
 endmodule
