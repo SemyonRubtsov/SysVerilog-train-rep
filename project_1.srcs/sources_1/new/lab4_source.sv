@@ -19,30 +19,28 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-interface if_axis #(parameter int N = 1) ();
-	localparam W = 8 * N; // TDATA bit width (N - number of bytes)
+//interface if_axis #(parameter int N = 1) ();
+//	localparam W = 8 * N; // TDATA bit width (N - number of bytes)
 	
-	logic         tready;
-	logic         tvalid;
-	logic         tlast ;
-	logic [W-1:0] tdata ;
+//	logic         tready;
+//	logic         tvalid;
+//	logic         tlast ;
+//	logic [W-1:0] tdata ;
 	
-	modport m (input tready, output tvalid, tlast, tdata);
-	modport s (output tready, input tvalid, tlast, tdata);
+//	modport m (input tready, output tvalid, tlast, tdata);
+//	//modport s (output tready, input tvalid, tlast, tdata);
 	
-endinterface : if_axis
+//endinterface : if_axis
 
 module lab4_source
 #(
     parameter G_BYT = 1,
     parameter P_LEN = 10,
-    parameter CRC_WAIT=1,
-    parameter SHIFT=10
+    parameter CRC_WAIT=1
 )
 (
     input logic i_clk,                                                                 
     input logic i_rst,                                                              
-    //input i_snd,
     
     if_axis.m m_axis
                                                                              
@@ -51,6 +49,11 @@ module lab4_source
     //output reg [7:0] m_axis_tdata,              // output wire [7 : 0] m_axis_tdata
     //output logic m_axis_tlast              // output wire m_axis_tlast         
 );
+    
+    initial begin
+        m_axis.tvalid='0;
+        m_axis.tdata='0;
+    end;
     
     localparam PACKET_WIDTH=int'($ceil($clog2(P_LEN+1)));
     
@@ -113,6 +116,8 @@ module lab4_source
             S <= S0;
             cnt=0;
             m_crc_rst='0;
+            m_axis.tvalid<='0;
+            m_axis.tdata<='0;
         end
         else
             case(S)
