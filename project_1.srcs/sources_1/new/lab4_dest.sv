@@ -30,7 +30,8 @@ module lab4_dest#(
     input i_rst,
    
     output logic err,
-   
+    output logic succes,
+    
     if_axis.s s_axis              // input wire s_axis_tlast
     
 );
@@ -40,6 +41,7 @@ module lab4_dest#(
     logic m_wrd_vld='0;
     logic m_crc_rst='0;
     logic m_receive;
+    logic o_crc_res_vld;
     
     reg [8:0] R_CRC='0;
     reg [8:0] C_CRC='0;
@@ -63,7 +65,7 @@ module lab4_dest#(
         .i_crc_ini_dat('0),
         .i_crc_wrd_dat(s_axis.tdata),
         .o_crc_wrd_rdy (),
-        .o_crc_res_vld (),
+        .o_crc_res_vld (o_crc_res_vld),
         .o_crc_res_dat(o_crc_res_dat)
     );
     
@@ -94,13 +96,16 @@ module lab4_dest#(
         if (i_rst) S<=S0;
         
         if (s_axis.tlast) R_CRC<=s_axis.tdata;
+        
+        if (o_crc_res_vld) C_CRC<=o_crc_res_dat;
+        
         //else cnt<=cnt+1;
         //err<=s_axis.tdata[0];
         
         case(S)
             S0: begin
             
-                err<=(o_crc_res_dat==R_CRC) ? '1:'0;
+                //err<=(C_CRC==R_CRC) ? '1:'0;
                 
                 if (s_axis.tvalid) begin
                    S <= S2;
@@ -113,11 +118,45 @@ module lab4_dest#(
                 end
             end
             S2: begin
+            
                 m_receive<=(s_axis.tvalid & !s_axis.tlast);
                 if (s_axis.tvalid & s_axis.tlast) begin
                     S<=S0;
                     m_receive<='0;
+                
+                err<='0;
+                succes<='1;
+                
+                if (!o_crc_res_vld) begin
+                    if (C_CRC!=R_CRC) begin
+                    err<='1;
+                    succes<='0;
                 end
+                end
+                
+                end
+            end
+            S3: begin
+                if (o_crc_res_vld) C_CRC<=o_crc_res_dat;
+                
+                if (s_axis.tvalid) begin
+                    S<=S4;
+                    err<='0;
+                    succes<='1;
+                end
+                
+            end
+            S4: begin
+            
+                if (C_CRC!=R_CRC) begin
+                    err<='1;
+                    succes<='0;
+                end
+                
+                if (s_axis.tvalid) begin
+                    S<=S2;
+                end
+                
             end
         endcase 
         
