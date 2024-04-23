@@ -56,7 +56,7 @@ module lab4_dest#(
 		//.CRC_REFOUT ('0), // Determines Whether The Inverted Order of The Bits of The Register at The Entrance to The Xor Element
 		//.BYTES_RVRS ('0) // Input Word Byte Reverse
 		.XOR_VECTOR ('0), // CRC Final Xor Vector
-		.NUM_STAGES (2)  // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3..NUM_STAGES(1) // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3.
+		.NUM_STAGES (1)  // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3..NUM_STAGES(1) // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3.
     ) g_crc (
         .i_crc_a_clk_p(i_clk),
         .i_crc_s_rst_p(s_axis.tlast),
@@ -90,10 +90,15 @@ module lab4_dest#(
     
     //assign err = i_crc_wrd_dat;
     //assign i_crc_wrd_dat = s_axis.tdata;
+    //assign S = !s_axis.tvalid ? S3:S;
+    //if (!s_axis.tvalid) S=S3;
     
     always_ff @(posedge i_clk) begin
         
-        if (i_rst) S<=S0;
+        if (i_rst) begin
+            S<=S0;
+            succes='0;
+        end
         
         if (s_axis.tlast) R_CRC<=s_axis.tdata;
         
@@ -106,6 +111,17 @@ module lab4_dest#(
             S0: begin
             
                 //err<=(C_CRC==R_CRC) ? '1:'0;
+                
+                //if (!o_crc_res_vld) begin
+                if (C_CRC==R_CRC) begin 
+                    err<='0;
+                    succes<='0;
+                end
+                else begin
+                    err<='1;
+                    succes<='0;
+                end
+                //end
                 
                 if (s_axis.tvalid) begin
                    S <= S2;
@@ -120,29 +136,25 @@ module lab4_dest#(
             S2: begin
             
                 m_receive<=(s_axis.tvalid & !s_axis.tlast);
-                if (s_axis.tvalid & s_axis.tlast) begin
-                    S<=S0;
+                
+                //if (!s_axis.tvalid) S<=S3;
+                
+                
+                if (s_axis.tlast) begin
                     m_receive<='0;
-                
-                err<='0;
-                succes<='1;
-                
-                if (!o_crc_res_vld) begin
-                    if (C_CRC!=R_CRC) begin
-                    err<='1;
-                    succes<='0;
-                end
-                end
-                
+                    succes<='1;
+                    err<='0;
+                    S<=S0;
+                    //else S<=S0;
                 end
             end
             S3: begin
-                if (o_crc_res_vld) C_CRC<=o_crc_res_dat;
+                //if (o_crc_res_vld) C_CRC<=o_crc_res_dat;
                 
                 if (s_axis.tvalid) begin
-                    S<=S4;
-                    err<='0;
-                    succes<='1;
+                    S<=S2;
+                    //err<='0;
+                    //succes<='1;
                 end
                 
             end

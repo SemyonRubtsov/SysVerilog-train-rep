@@ -35,7 +35,7 @@
 module lab4_source
 #(
     parameter G_BYT = 1,
-    parameter P_LEN = 10,
+    parameter P_LEN = 12,
     parameter CRC_WAIT=1
 )
 (
@@ -115,7 +115,7 @@ module lab4_source
         if (i_rst) begin
             S <= S0;
             cnt=0;
-            m_crc_rst='0;
+            m_crc_rst='1;
             m_axis.tvalid<='0;
             m_axis.tdata<='0;
         end
@@ -124,8 +124,11 @@ module lab4_source
                 S0:begin
                     
                     if (m_axis.tready) begin
-                        S <= S1;
-                        m_axis.tvalid <= '0;   
+                        S <= S3;
+                        m_axis.tvalid <= '0;
+                        cnt<=0;   
+                        m_crc_rst='1;
+                        m_axis.tlast <= '0;
                      end   
                 end
                 S1:begin
@@ -146,8 +149,11 @@ module lab4_source
                     end
                 end
                 S2:begin
-                if (m_axis.tready & !m_axis.tvalid) m_axis.tvalid <= '1;
-                        
+                if (m_axis.tready & !m_axis.tvalid) begin
+                    m_axis.tvalid <= '1;
+                    //m_crc_rst='0;
+                end 
+                    //m_crc_rst='0;   
                     m_axis.tdata  <= P_LEN;
                     //i_crc_wrd_dat <= P_LEN;
                     
@@ -163,15 +169,21 @@ module lab4_source
                     
                     if (m_axis.tready & !m_axis.tvalid) begin
                         m_axis.tvalid <= '1;
-                        m_wrd_vld<=1;
+                        //m_wrd_vld<=1;
                     end
+                    m_crc_rst='0;
                     //else m_wrd_vld<=0;
                     //m_axis.tvalid<=m_axis.tready ? '1 : '0;
-                    m_wrd_vld<=m_axis.tready ? '1 : '0;
+                    //m_wrd_vld<=m_axis.tready ? '1 : '0;
                     
                     if (m_axis.tready & cnt<P_LEN) begin
-                        m_axis.tdata  <= cnt+1;
-                        i_crc_wrd_dat <= cnt+1;
+                        if (cnt==0) m_axis.tdata  <= 72;
+                        else if (cnt==1) m_axis.tdata  <= 10;
+                        else begin 
+                            m_wrd_vld<=m_axis.tready ? '1 : '0;
+                            m_axis.tdata  <= cnt-1;
+                            i_crc_wrd_dat <= cnt-1;
+                        end
                         cnt<=cnt+1;
                     end
                     

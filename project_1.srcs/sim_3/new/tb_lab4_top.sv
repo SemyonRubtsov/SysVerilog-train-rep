@@ -50,6 +50,7 @@ parameter T_CLK = 1.0 // ns
 );
 
 logic [2:0] i_aresetn = '1; // asynchronous reset, active-low
+logic [2:0] rstreg = '0;
 logic i_aclk    = '0; // clock
 
 if_axis #(.N(G_BYT)) s_axis ();
@@ -106,6 +107,15 @@ end
 // simulate clock
 always #(T_CLK/2.0) i_aclk = ~i_aclk;
 
+always #(T_CLK*200) begin
+    
+    i_aresetn=1;
+    rstreg=rstreg<<<1;
+    if (rstreg=='0) rstreg=1;
+    #1 i_aresetn='0;
+    
+
+end
 //axis_data_fifo_0 u_fifo (
 //  .s_axis_aresetn(i_aresetn),          // input wire s_axis_aresetn
 //  .s_axis_aclk(i_aclk),                // input wire s_axis_aclk
