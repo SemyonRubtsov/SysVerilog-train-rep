@@ -107,7 +107,7 @@ end
 // simulate clock
 always #(T_CLK/2.0) i_aclk = ~i_aclk;
 
-always #(T_CLK*200) begin
+always #(T_CLK*275) begin
     
     i_aresetn=1;
     rstreg=rstreg<<<1;

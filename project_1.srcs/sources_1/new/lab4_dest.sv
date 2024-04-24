@@ -42,6 +42,8 @@ module lab4_dest#(
     logic m_crc_rst='0;
     logic m_receive;
     logic o_crc_res_vld;
+    int m_pkt_len;
+    int m_byte_counter;
     
     reg [8:0] R_CRC='0;
     reg [8:0] C_CRC='0;
@@ -59,7 +61,7 @@ module lab4_dest#(
 		.NUM_STAGES (1)  // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3..NUM_STAGES(1) // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3.
     ) g_crc (
         .i_crc_a_clk_p(i_clk),
-        .i_crc_s_rst_p(s_axis.tlast),
+        .i_crc_s_rst_p(succes),
         .i_crc_ini_vld('0),
         .i_crc_wrd_vld(m_receive),
         .i_crc_ini_dat('0),
@@ -125,6 +127,9 @@ module lab4_dest#(
                 
                 if (s_axis.tvalid) begin
                    S <= S2;
+                   m_pkt_len<='0;
+                   m_byte_counter<=0;
+                   //m_receive<='1;
                    //m_axis.tvalid <= '0;   
                 end
             end
@@ -137,16 +142,19 @@ module lab4_dest#(
             
                 m_receive<=(s_axis.tvalid & !s_axis.tlast);
                 
-                //if (!s_axis.tvalid) S<=S3;
+                if (!m_pkt_len) m_pkt_len<=s_axis.tdata;
+                m_byte_counter<=m_byte_counter+1;
                 
-                
-                if (s_axis.tlast) begin
+                if (m_byte_counter == m_pkt_len & m_pkt_len!=0) begin
                     m_receive<='0;
                     succes<='1;
                     err<='0;
-                    S<=S0;
+                    //S<=S0;
                     //else S<=S0;
                 end
+                
+                if (s_axis.tlast) S<=S0;
+                
             end
             S3: begin
                 //if (o_crc_res_vld) C_CRC<=o_crc_res_dat;
