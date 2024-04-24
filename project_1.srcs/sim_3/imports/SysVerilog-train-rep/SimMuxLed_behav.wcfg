@@ -11,18 +11,22 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="6.500 ns"></ZoomStartTime>
-      <ZoomEndTime time="3,616.501 ns"></ZoomEndTime>
-      <Cursor1Time time="1,676.500 ns"></Cursor1Time>
+      <ZoomStartTime time="458.167 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,144.168 ns"></ZoomEndTime>
+      <Cursor1Time time="572.500 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="206"></NameColumnWidth>
-      <ValueColumnWidth column_width="112"></ValueColumnWidth>
+      <NameColumnWidth column_width="241"></NameColumnWidth>
+      <ValueColumnWidth column_width="117"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="33" />
+   <WVObjectSize size="35" />
    <wvobject type="array" fp_name="/tb_lab4_top/u_lab4/src_fifo/tdata">
       <obj_property name="ElementShortName">tdata[7:0]</obj_property>
       <obj_property name="ObjectShortName">tdata[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_top/u_lab4/u_src/u_crc/i_crc_wrd_vld">
+      <obj_property name="ElementShortName">i_crc_wrd_vld</obj_property>
+      <obj_property name="ObjectShortName">i_crc_wrd_vld</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/tb_lab4_top/u_lab4/u_fifo/s_axis_tready">
       <obj_property name="ElementShortName">s_axis_tready</obj_property>
@@ -37,8 +41,12 @@
       <obj_property name="ObjectShortName">tvalid</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/tb_lab4_top/u_lab4/u_src/S">
-      <obj_property name="ElementShortName">S[3:0]</obj_property>
-      <obj_property name="ObjectShortName">S[3:0]</obj_property>
+      <obj_property name="ElementShortName">S[2:0]</obj_property>
+      <obj_property name="ObjectShortName">S[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_lab4_top/u_lab4/u_src/o_crc_res_dat">
+      <obj_property name="ElementShortName">o_crc_res_dat[7:0]</obj_property>
+      <obj_property name="ObjectShortName">o_crc_res_dat[7:0]</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/tb_lab4_top/u_lab4/u_dst/i_clk">
       <obj_property name="ElementShortName">i_clk</obj_property>
@@ -93,11 +101,9 @@
       <obj_property name="ElementShortName">tdata[7:0]</obj_property>
       <obj_property name="ObjectShortName">tdata[7:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/tb_lab4_top/u_lab4/u_dst/S">
-      <obj_property name="ElementShortName">S[3:0]</obj_property>
-      <obj_property name="ObjectShortName">S[3:0]</obj_property>
-      <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
-      <obj_property name="UseCustomSignalColor">true</obj_property>
+   <wvobject type="logic" fp_name="/tb_lab4_top/u_lab4/u_dst/S">
+      <obj_property name="ElementShortName">S</obj_property>
+      <obj_property name="ObjectShortName">S</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/tb_lab4_top/u_lab4/u_dst/s_axis/tvalid">
       <obj_property name="ElementShortName">tvalid</obj_property>
@@ -110,14 +116,6 @@
       <obj_property name="ObjectShortName">tlast</obj_property>
       <obj_property name="CustomSignalColor">#FF00FF</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab4_top/u_lab4/u_dst/err">
-      <obj_property name="ElementShortName">err</obj_property>
-      <obj_property name="ObjectShortName">err</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab4_top/u_lab4/u_dst/succes">
-      <obj_property name="ElementShortName">succes</obj_property>
-      <obj_property name="ObjectShortName">succes</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/tb_lab4_top/u_lab4/u_dst/C_CRC">
       <obj_property name="ElementShortName">C_CRC[8:0]</obj_property>
@@ -165,5 +163,13 @@
    <wvobject type="array" fp_name="/tb_lab4_top/u_lab4/u_dst/m_byte_counter">
       <obj_property name="ElementShortName">m_byte_counter[31:0]</obj_property>
       <obj_property name="ObjectShortName">m_byte_counter[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_top/u_lab4/u_dst/o_err">
+      <obj_property name="ElementShortName">o_err</obj_property>
+      <obj_property name="ObjectShortName">o_err</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_top/u_lab4/u_dst/o_succes">
+      <obj_property name="ElementShortName">o_succes</obj_property>
+      <obj_property name="ObjectShortName">o_succes</obj_property>
    </wvobject>
 </wave_config>

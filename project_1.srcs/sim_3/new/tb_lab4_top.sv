@@ -107,13 +107,12 @@ end
 // simulate clock
 always #(T_CLK/2.0) i_aclk = ~i_aclk;
 
-always #(T_CLK*275) begin
+always #(T_CLK*296) begin
     
     i_aresetn=1;
     rstreg=rstreg<<<1;
     if (rstreg=='0) rstreg=1;
     #1 i_aresetn='0;
-    
 
 end
 //axis_data_fifo_0 u_fifo (
