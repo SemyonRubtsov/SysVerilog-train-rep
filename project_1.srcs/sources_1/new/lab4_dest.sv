@@ -21,9 +21,9 @@
 
 
 module lab4_dest#(
-    parameter G_BYT = 1,
-    parameter P_LEN = 10,
-    parameter CRC_WAIT=1
+    parameter G_BYT = 1
+    //parameter P_LEN = 10,
+    //parameter CRC_WAIT=1
 ) (
 
     input i_clk,
@@ -62,7 +62,7 @@ module lab4_dest#(
 		.NUM_STAGES (1)  // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3..NUM_STAGES(1) // Number of Register Stages, Equivalent Latency in Module. Minimum is 1, Maximum is 3.
     ) g_crc (
         .i_crc_a_clk_p(i_clk),
-        .i_crc_s_rst_p(o_succes),
+        .i_crc_s_rst_p(m_crc_rst),
         .i_crc_ini_vld('0),
         .i_crc_wrd_vld(m_receive),
         .i_crc_ini_dat('0),
@@ -79,51 +79,78 @@ module lab4_dest#(
         //S<=0;
     //end
     
+    always_ff @(posedge S) begin
+       m_pkt_len<=s_axis.tdata; 
+       //m_crc_rst<=';
+    end;
+    
+    always_ff @(negedge S) begin
+       C_CRC<=o_crc_res_dat;
+       //m_crc_rst<=';
+    end;
+    
     always_ff @(posedge i_clk) begin
         
         if (i_rst) begin
             S<=0;
             s_axis.tready = '1;
             o_succes='0;
+            m_receive<='0;
+            m_byte_counter<=0;
+            //m_pkt_len<='0;
         end
         
         if (s_axis.tlast) R_CRC<=s_axis.tdata;
         
-        if (o_crc_res_vld) C_CRC<=o_crc_res_dat;
+        //if (o_crc_res_vld) C_CRC<=o_crc_res_dat;
         
         case(S)
             0: begin
-            
-                if (C_CRC==R_CRC) begin 
-                    o_err<='0;
-                    o_succes<='0;
-                end
-                else begin
-                    o_err<='1;
-                    o_succes<='0;
-                end
-                
-                if (s_axis.tvalid) begin
-                   S <= 1;
-                   m_pkt_len<='0;
-                   m_byte_counter<=0;
+                if(!i_rst) begin
+                    if (C_CRC==R_CRC) begin 
+                        o_err<='0;
+                        o_succes<='0;
+                    end
+                    else begin
+                        o_err<='1;
+                        o_succes<='0;
+                    end
+                    
+                    m_crc_rst<='0;
+                    
+                    if (s_axis.tvalid) begin
+                       S <= 1;
+                       //m_pkt_len<=s_axis.tdata;
+                       m_byte_counter<=0;
+                       m_crc_rst<='1;
+                    end
                 end
             end
             1: begin
-            
+                m_crc_rst<='0;
                 m_receive<=(s_axis.tvalid & !s_axis.tlast);
                 
-                if (!m_pkt_len) m_pkt_len<=s_axis.tdata;
+                //if (m_receive) m_pkt_len<=s_axis.tdata;
                 m_byte_counter<=m_byte_counter+1;
                 
-                if (m_byte_counter == m_pkt_len & m_pkt_len!=0) begin
-                    m_receive<='0;
-                    o_succes<='1;
-                    o_err<='0;
+                if (m_byte_counter-1 == m_pkt_len & m_pkt_len!=0) begin
+                    //m_receive<='0;
+                    //o_succes<='1;
+                    //o_err<='0;
+                    if (s_axis.tlast) begin
+                        o_succes<='1;
+                        o_err<='0;
+                    end
+                    else begin
+                        o_succes<='1;
+                        o_err<='1;
+                    end
                 end
                 
-                if (s_axis.tlast) S<=0;
-                
+                if (s_axis.tlast) begin
+                    S<=0;
+                    //m_crc_rst<='1;
+                end
             end
         endcase 
     end

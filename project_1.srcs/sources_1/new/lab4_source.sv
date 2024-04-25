@@ -93,6 +93,8 @@ module lab4_source
         m_axis.tvalid <= '1;
     endtask
     
+    
+    
     always_ff @(posedge i_clk) begin
         
         if (i_rst) begin
