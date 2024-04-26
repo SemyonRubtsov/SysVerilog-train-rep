@@ -43,6 +43,7 @@ module lab4_dest#(
     logic m_receive;
     logic S;
     logic o_crc_res_vld;
+    logic m_cor_len;
     int m_pkt_len;
     int m_byte_counter;
     
@@ -64,7 +65,7 @@ module lab4_dest#(
         .i_crc_a_clk_p(i_clk),
         .i_crc_s_rst_p(m_crc_rst),
         .i_crc_ini_vld('0),
-        .i_crc_wrd_vld(m_receive),
+        .i_crc_wrd_vld(s_axis.tready & s_axis.tvalid & S),//m_receive),
         .i_crc_ini_dat('0),
         .i_crc_wrd_dat(s_axis.tdata),
         .o_crc_wrd_rdy (),
@@ -89,18 +90,14 @@ module lab4_dest#(
        //m_crc_rst<=';
     end;
     
+    always_ff @(posedge s_axis.tlast) begin
+       R_CRC<=s_axis.tdata;
+       //m_crc_rst<=';
+    end;
+    
     always_ff @(posedge i_clk) begin
         
-        if (i_rst) begin
-            S<=0;
-            s_axis.tready = '1;
-            o_succes='0;
-            m_receive<='0;
-            m_byte_counter<=0;
-            //m_pkt_len<='0;
-        end
-        
-        if (s_axis.tlast) R_CRC<=s_axis.tdata;
+        //.if (s_axis.tlast) R_CRC<=s_axis.tdata;
         
         //if (o_crc_res_vld) C_CRC<=o_crc_res_dat;
         
@@ -109,9 +106,9 @@ module lab4_dest#(
                 if(!i_rst) begin
                     if (C_CRC==R_CRC) begin 
                         o_err<='0;
-                        o_succes<='0;
+                        o_succes<='1;
                     end
-                    else begin
+                    else if (o_crc_res_vld) begin
                         o_err<='1;
                         o_succes<='0;
                     end
@@ -123,26 +120,30 @@ module lab4_dest#(
                        //m_pkt_len<=s_axis.tdata;
                        m_byte_counter<=0;
                        m_crc_rst<='1;
+                       m_cor_len<='0;
                     end
                 end
             end
             1: begin
                 m_crc_rst<='0;
-                m_receive<=(s_axis.tvalid & !s_axis.tlast);
+                m_receive<=(s_axis.tready & s_axis.tvalid & !s_axis.tlast);
                 
                 //if (m_receive) m_pkt_len<=s_axis.tdata;
-                m_byte_counter<=m_byte_counter+1;
+                if (m_byte_counter<m_pkt_len)
+                    m_byte_counter<=m_byte_counter+1;
                 
                 if (m_byte_counter-1 == m_pkt_len & m_pkt_len!=0) begin
                     //m_receive<='0;
                     //o_succes<='1;
                     //o_err<='0;
                     if (s_axis.tlast) begin
+                        //m_cor_len<='1;
                         o_succes<='1;
                         o_err<='0;
                     end
                     else begin
-                        o_succes<='1;
+                        m_cor_len<='0;
+                        o_succes<='0;
                         o_err<='1;
                     end
                 end
@@ -153,5 +154,17 @@ module lab4_dest#(
                 end
             end
         endcase 
+        
+        if (i_rst) begin
+            S<=0;
+            s_axis.tready = '1;
+            o_succes='0;
+            o_err='0;
+            m_cor_len<='0;
+            m_receive<='0;
+            m_byte_counter<=0;
+            //m_pkt_len<='0;
+        end
+        
     end
 endmodule

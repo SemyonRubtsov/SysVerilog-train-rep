@@ -47,7 +47,7 @@ if_axis #(.N(1)) m_axis ();
 task send_packet;
 
     input int i_p_len;
-    input reg [2:0] i_settings;
+    input reg [3:0] i_settings;
     
     begin
         m_axis.tvalid <= '1;
@@ -67,6 +67,9 @@ task send_packet;
 			m_axis.tdata  <= i+1;
 			#(T_CLK);
         end
+        m_axis.tvalid <= '0;
+        #(T_CLK);
+        m_axis.tvalid <= '1;
         
         m_axis.tlast <= '1;
         if (i_settings[2]) m_axis.tdata<=tst_crc_arr[i_p_len-1]; //send real precalculated CRC
@@ -75,7 +78,7 @@ task send_packet;
         
         m_axis.tlast<='0;
         m_axis.tvalid <= '0; //end packet
-        #(T_CLK);
+        if (i_settings[3]) #(T_CLK);
     end
 endtask
     
@@ -97,17 +100,28 @@ initial begin
     i_rst = '0;
     m_axis.tlast <= '0;
     
-    send_packet(10,3'b111);
-    send_packet(10,3'b111);
-    send_packet(10,3'b111);
-    send_packet(10,3'b110);
-    send_packet(10,3'b101);
-    send_packet(10,3'b011);
-    send_packet(10,3'b001);
-    send_packet(10,3'b001);
+    send_packet(10,4'b1111); //good
+    send_packet(12,4'b0111); //good
+    send_packet(8,4'b1111); //good
+    send_packet(10,4'b1111); //bad
+    send_packet(10,4'b1101); //bad
     
+    send_packet(4,4'b0111);//good
+    send_packet(6,4'b0111);//good
+    
+    send_packet(10,4'b1011); //bad
+    send_packet(10,4'b1001); //bad
+    send_packet(8,4'b1001); //bad
+    send_packet(10,4'b0111); //good
+    send_packet(10,4'b1111); //good
+    //m_axis.tvalid <= '0;
     #500;
     i_rst = '1;
+    #590;
+    i_rst = '0;
+    
+    send_packet(10,3'b111);
+    m_axis.tvalid <= '0;
 end
 
 endmodule

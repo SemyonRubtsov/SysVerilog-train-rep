@@ -12,57 +12,37 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="138.801 ns"></ZoomEndTime>
-      <Cursor1Time time="48.000 ns"></Cursor1Time>
+      <ZoomEndTime time="251.801 ns"></ZoomEndTime>
+      <Cursor1Time time="132.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="241"></NameColumnWidth>
-      <ValueColumnWidth column_width="105"></ValueColumnWidth>
+      <ValueColumnWidth column_width="101"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="17" />
-   <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/o_succes">
-      <obj_property name="ElementShortName">o_succes</obj_property>
-      <obj_property name="ObjectShortName">o_succes</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/o_err">
-      <obj_property name="ElementShortName">o_err</obj_property>
-      <obj_property name="ObjectShortName">o_err</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/o_crc_res_dat">
-      <obj_property name="ElementShortName">o_crc_res_dat[7:0]</obj_property>
-      <obj_property name="ObjectShortName">o_crc_res_dat[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/m_receive">
-      <obj_property name="ElementShortName">m_receive</obj_property>
-      <obj_property name="ObjectShortName">m_receive</obj_property>
+   <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/s_axis/tvalid">
+      <obj_property name="ElementShortName">tvalid</obj_property>
+      <obj_property name="ObjectShortName">tvalid</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/s_axis/tlast">
       <obj_property name="ElementShortName">tlast</obj_property>
       <obj_property name="ObjectShortName">tlast</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/s_axis/tvalid">
-      <obj_property name="ElementShortName">tvalid</obj_property>
-      <obj_property name="ObjectShortName">tvalid</obj_property>
+   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/o_crc_res_dat">
+      <obj_property name="ElementShortName">o_crc_res_dat[7:0]</obj_property>
+      <obj_property name="ObjectShortName">o_crc_res_dat[7:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/R_CRC">
-      <obj_property name="ElementShortName">R_CRC[8:0]</obj_property>
-      <obj_property name="ObjectShortName">R_CRC[8:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/C_CRC">
-      <obj_property name="ElementShortName">C_CRC[8:0]</obj_property>
-      <obj_property name="ObjectShortName">C_CRC[8:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/m_byte_counter">
-      <obj_property name="ElementShortName">m_byte_counter[31:0]</obj_property>
-      <obj_property name="ObjectShortName">m_byte_counter[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/g_crc/i_crc_s_rst_p">
-      <obj_property name="ElementShortName">i_crc_s_rst_p</obj_property>
-      <obj_property name="ObjectShortName">i_crc_s_rst_p</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/s_axis/tdata">
+   <wvobject type="array" fp_name="/tb_lab4_dest/m_axis/tdata">
       <obj_property name="ElementShortName">tdata[7:0]</obj_property>
       <obj_property name="ObjectShortName">tdata[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/o_err">
+      <obj_property name="ElementShortName">o_err</obj_property>
+      <obj_property name="ObjectShortName">o_err</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/o_succes">
+      <obj_property name="ElementShortName">o_succes</obj_property>
+      <obj_property name="ObjectShortName">o_succes</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/m_pkt_len">
       <obj_property name="ElementShortName">m_pkt_len[31:0]</obj_property>
@@ -72,20 +52,40 @@
       <obj_property name="ElementShortName">S</obj_property>
       <obj_property name="ObjectShortName">S</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/g_crc/o_crc_res_dat">
-      <obj_property name="ElementShortName">o_crc_res_dat[7:0]</obj_property>
-      <obj_property name="ObjectShortName">o_crc_res_dat[7:0]</obj_property>
+   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/R_CRC">
+      <obj_property name="ElementShortName">R_CRC[8:0]</obj_property>
+      <obj_property name="ObjectShortName">R_CRC[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/C_CRC">
+      <obj_property name="ElementShortName">C_CRC[8:0]</obj_property>
+      <obj_property name="ObjectShortName">C_CRC[8:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/g_crc/i_crc_wrd_dat">
+      <obj_property name="ElementShortName">i_crc_wrd_dat[7:0]</obj_property>
+      <obj_property name="ObjectShortName">i_crc_wrd_dat[7:0]</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/g_crc/i_crc_s_rst_p">
       <obj_property name="ElementShortName">i_crc_s_rst_p</obj_property>
       <obj_property name="ObjectShortName">i_crc_s_rst_p</obj_property>
    </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/i_rst">
+      <obj_property name="ElementShortName">i_rst</obj_property>
+      <obj_property name="ObjectShortName">i_rst</obj_property>
+   </wvobject>
    <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/g_crc/o_crc_res_vld">
       <obj_property name="ElementShortName">o_crc_res_vld</obj_property>
       <obj_property name="ObjectShortName">o_crc_res_vld</obj_property>
    </wvobject>
+   <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/g_crc/o_crc_res_dat">
+      <obj_property name="ElementShortName">o_crc_res_dat[7:0]</obj_property>
+      <obj_property name="ObjectShortName">o_crc_res_dat[7:0]</obj_property>
+   </wvobject>
    <wvobject type="array" fp_name="/tb_lab4_dest/u_dest/g_crc/i_crc_wrd_dat">
       <obj_property name="ElementShortName">i_crc_wrd_dat[7:0]</obj_property>
       <obj_property name="ObjectShortName">i_crc_wrd_dat[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab4_dest/u_dest/m_receive">
+      <obj_property name="ElementShortName">m_receive</obj_property>
+      <obj_property name="ObjectShortName">m_receive</obj_property>
    </wvobject>
 </wave_config>
