@@ -30,6 +30,7 @@ module lab4_shiftreg
     input byte i_data,
     input logic i_reg_vld,
     output logic o_data_vld,
+    output logic o_data_tlast,
     output byte o_data
 );
     
@@ -68,9 +69,14 @@ module lab4_shiftreg
         
         //if (i_reg_vld & m_cnt==0) o_data_vld<='1; // temporary, must be fixed
         
-        if (m_cnt==PACKET_LEN-1 | !i_reg_vld)
-            o_data_vld<='0;
+        o_data_tlast<='0;
         
+        if (m_cnt==PACKET_LEN-1 | !i_reg_vld) begin
+            o_data_vld<='0;
+        end
+        
+        if (m_cnt==PACKET_LEN-2)
+            o_data_tlast<='1;
     end
     
     assign o_data = m_shiftreg[0];

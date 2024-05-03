@@ -35,7 +35,7 @@
 module lab4_source
 #(
     parameter G_BYT = 1,
-    parameter P_LEN = 12,
+    parameter P_LEN = 14,
     parameter CRC_WAIT=1
 )
 (
@@ -94,7 +94,8 @@ module lab4_source
         .i_data(m_data),
         .i_reg_vld(m_dat_vld),
         .o_data_vld(m_axis.tvalid),
-        .o_data(m_axis.tdata)
+        .o_data(m_axis.tdata),
+        .o_data_tlast(m_axis.tlast)
     );
     
     enum logic [2:0] {S0 = 3'b00,
@@ -125,7 +126,7 @@ module lab4_source
                         m_dat_vld <= '0;
                         cnt<=0;   
                         m_crc_rst='1;
-                        m_axis.tlast <= '0;
+                        //m_axis.tlast <= '0;
                      end   
                 end
                 S1:begin //send data
@@ -141,7 +142,7 @@ module lab4_source
                     
                     if (m_axis.tready & cnt<P_LEN) begin
                         if (cnt==0) m_data  <= 72;
-                        else if (cnt==1) m_data  <= 10;
+                        else if (cnt==1) m_data  <= P_LEN-2;
                         else begin 
                             m_wrd_vld<=m_axis.tready ? '1 : '0;
                             m_data  <= cnt-1;
@@ -161,14 +162,14 @@ module lab4_source
                 S2:begin
                     if (m_axis.tready & !m_dat_vld) begin
                         m_dat_vld <= '1;
-                        m_axis.tlast <= '1;
+                        //m_axis.tlast <= '1;
                     end
                     //Send CRC
                     
                     m_data  <= o_crc_res_dat;
                         
                     if (m_dat_vld & m_axis.tready) begin
-                        S <= S3;
+                        S <= S0;
                         m_dat_vld <= '0;
                         cnt<='0;
                         
@@ -176,7 +177,7 @@ module lab4_source
                 end
                 S3:begin
                     //m_crc_rst='1;
-                    if (m_axis.tready & cnt<P_LEN)
+                    if (m_axis.tready & cnt<1)
                         cnt=cnt+1;
                     else
                         S<=S0;
