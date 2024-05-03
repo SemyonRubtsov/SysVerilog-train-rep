@@ -26,6 +26,7 @@ module lab4_shiftreg
 )
 (
     input logic i_clk,
+    input logic i_rst,
     input byte i_data,
     input logic i_reg_vld,
     output logic o_data_vld,
@@ -37,14 +38,24 @@ module lab4_shiftreg
     reg [0:3] m_cnt = '0;
     reg [PACKET_LEN-1:0][8-1:0] m_shiftreg = {PACKET_LEN{1'b0}};
 
+    //always @(negedge i_reg_vld) begin
+        //m_cnt<=0;
+    //end
+
+    always @(posedge i_reg_vld) begin
+        if (m_shiftreg[0]==72) o_data_vld<='1;
+        m_cnt<=0;
+    end
+
     always @(posedge i_clk) begin
+    
+        if (i_rst) begin
+            m_cnt=0;
+            //m_shiftreg is necessary?
+        end
+    
         if (i_reg_vld) begin
         m_shiftreg  <= {i_data, m_shiftreg[PACKET_LEN-1:1]};
-        
-        if (m_cnt==PACKET_LEN-2)
-            o_data_vld<='0;
-        
-        if (m_cnt==1) o_data_vld<='1; // temporary, must be fixed
         
         if (m_cnt<PACKET_LEN-1)
             m_cnt<=m_cnt+1;
@@ -54,6 +65,11 @@ module lab4_shiftreg
         end
         
         end
+        
+        //if (i_reg_vld & m_cnt==0) o_data_vld<='1; // temporary, must be fixed
+        
+        if (m_cnt==PACKET_LEN-1 | !i_reg_vld)
+            o_data_vld<='0;
         
     end
     

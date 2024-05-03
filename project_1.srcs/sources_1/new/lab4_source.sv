@@ -90,6 +90,7 @@ module lab4_source
     )
     u_shift(
         .i_clk(i_clk),
+        .i_rst(i_rst),
         .i_data(m_data),
         .i_reg_vld(m_dat_vld),
         .o_data_vld(m_axis.tvalid),
