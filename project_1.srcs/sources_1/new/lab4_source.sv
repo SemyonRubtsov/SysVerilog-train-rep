@@ -40,7 +40,8 @@ module lab4_source
 )
 (
     input logic i_clk,                                                                 
-    input logic i_rst,                                                              
+    input logic i_rst,
+    input logic i_fifo_progfull,                                                              
     
     if_axis.m m_axis
      
@@ -93,6 +94,7 @@ module lab4_source
         .i_rst(i_rst),
         .i_data(m_data),
         .i_reg_vld(m_dat_vld),
+        .i_tready(m_axis.tready),
         .o_data_vld(m_axis.tvalid),
         .o_data(m_axis.tdata),
         .o_data_tlast(m_axis.tlast)

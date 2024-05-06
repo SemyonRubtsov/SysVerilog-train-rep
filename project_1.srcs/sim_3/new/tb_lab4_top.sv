@@ -21,18 +21,9 @@
 
 
 // simple AXIS interface
-interface if_axis #(parameter int N = 1) ();
-	localparam W = 8 * N; // TDATA bit width (N - number of bytes)
-	
-	logic         tready;
-	logic         tvalid;
-	logic         tlast ;
-	logic [W-1:0] tdata ;
-	
-	modport m (input tready, output tvalid, tlast, tdata);
-	modport s (output tready, input tvalid, tlast, tdata);
-	
-endinterface : if_axis
+
+
+logic i_ready='1;
 
 module tb_lab4_top 
 #(
@@ -41,6 +32,7 @@ parameter G_WID = 8 * G_BYT, // bit width
 parameter T_CLK = 1.0 // ns
 )
 (
+
     // UUT generics
 	//int G_BYT = 1, // byte width
 	//int G_WID = 8 * G_BYT, // bit width
@@ -50,8 +42,9 @@ parameter T_CLK = 1.0 // ns
 );
 
 logic [2:0] i_aresetn = '1; // asynchronous reset, active-low
-logic [2:0] rstreg = '0;
+logic [2:0] rstreg = 1;
 logic i_aclk    = '0; // clock
+logic tb_dest_tready='1;
 
 if_axis #(.N(G_BYT)) s_axis ();
 if_axis #(.N(G_BYT)) m_axis ();
@@ -109,12 +102,19 @@ always #(T_CLK/2.0) i_aclk = ~i_aclk;
 
 always #(T_CLK*296) begin
     
-    i_aresetn=1;
+    i_aresetn=rstreg;
     rstreg=rstreg<<<1;
     if (rstreg=='0) rstreg=1;
     #1 i_aresetn='0;
 
 end
+
+always #(T_CLK*196) begin
+    
+    //i_ready=~i_ready;
+
+end
+
 //axis_data_fifo_0 u_fifo (
 //  .s_axis_aresetn(i_aresetn),          // input wire s_axis_aresetn
 //  .s_axis_aclk(i_aclk),                // input wire s_axis_aclk
@@ -137,7 +137,9 @@ end
 
 lab4_top u_lab4 (
     .i_clk(i_aclk),
-    .i_rst(i_aresetn)
+    .i_rst(i_aresetn),
+    
+    .i_ready(i_ready)
 );
 
 endmodule

@@ -28,6 +28,7 @@ module lab4_dest#(
 
     input i_clk,
     input i_rst,
+    input logic i_ready,
    
     output logic o_err,
     output logic o_succes,
@@ -80,6 +81,8 @@ module lab4_dest#(
         //S<=0;
     //end
     
+    //assign s_axis.tready=i_ready;
+    
     always_ff @(posedge S) begin
        m_pkt_len<=s_axis.tdata; 
        //m_crc_rst<=';
@@ -98,7 +101,7 @@ module lab4_dest#(
     always_ff @(posedge i_clk) begin
         
         //.if (s_axis.tlast) R_CRC<=s_axis.tdata;
-        
+        s_axis.tready<=i_ready;
         //if (o_crc_res_vld) C_CRC<=o_crc_res_dat;
         
         case(S)
