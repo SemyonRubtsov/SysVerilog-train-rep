@@ -135,6 +135,9 @@ module lab4_source
                         m_dat_vld <= '1;
                         //m_wrd_vld<=1;
                     end
+                    
+                    if (m_axis.tready==0) m_dat_vld <= '0;
+                    
                     m_crc_rst='0;
                     //else m_wrd_vld<=0;
                     //m_axis.tvalid<=m_axis.tready ? '1 : '0;

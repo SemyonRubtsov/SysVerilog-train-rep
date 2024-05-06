@@ -45,14 +45,18 @@ module lab4_shiftreg
 
     always @(posedge i_reg_vld) begin
         if (m_shiftreg[0]==72) o_data_vld<='1;
-        m_cnt<=0;
+        if (m_cnt==PACKET_LEN-1) m_cnt<=0;
     end
 
     always @(posedge i_clk) begin
     
         if (i_rst) begin
             m_cnt=0;
-            //m_shiftreg is necessary?
+            m_shiftreg='0;
+            o_data_vld='0;
+            o_data_tlast='0;
+            o_data='0;
+            //m_shiftreg must be reseted?
         end
     
         if (i_reg_vld) begin
@@ -71,11 +75,11 @@ module lab4_shiftreg
         
         o_data_tlast<='0;
         
-        if (m_cnt==PACKET_LEN-1 | !i_reg_vld) begin
+        if (m_cnt==PACKET_LEN | !i_reg_vld) begin
             o_data_vld<='0;
         end
         
-        if (m_cnt==PACKET_LEN-2)
+        if (m_cnt==PACKET_LEN-1)
             o_data_tlast<='1;
     end
     
