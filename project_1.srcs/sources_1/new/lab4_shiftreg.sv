@@ -22,7 +22,7 @@
 
 module lab4_shiftreg
 #(
-    parameter PACKET_LEN = 12
+    parameter PACKET_LEN = 16
 )
 (
     input logic i_clk,
@@ -37,7 +37,7 @@ module lab4_shiftreg
     
     //parameter shift = 12;
 
-    reg [0:3] m_cnt = '0;
+    reg [0:4] m_cnt = '0;
     reg [PACKET_LEN-1:0][8-1:0] m_shiftreg = {PACKET_LEN{1'b0}};
 
     //always @(negedge i_reg_vld) begin
@@ -55,7 +55,7 @@ module lab4_shiftreg
     
         if (i_rst) begin
             m_cnt=0;
-            m_shiftreg='0;
+            //m_shiftreg='0;
             o_data_vld='0;
             o_data_tlast='0;
             o_data='0;
@@ -81,7 +81,9 @@ module lab4_shiftreg
             o_data_vld<='0;
         end
         
-        if (m_cnt==PACKET_LEN-1)
+        
+        
+        if (m_cnt==PACKET_LEN-1 & o_data_vld)
             o_data_tlast<='1;
     end
     

@@ -37,7 +37,7 @@ module lab4_dest#(
     
 );
     
-    logic [G_BYT*8-1:0] o_crc_res_dat='0;
+    logic [G_BYT*8-1:0] o_crc_res_dat;
     logic [G_BYT*8-1:0] i_crc_wrd_dat='0;
     logic m_wrd_vld='0;
     logic m_crc_rst='0;

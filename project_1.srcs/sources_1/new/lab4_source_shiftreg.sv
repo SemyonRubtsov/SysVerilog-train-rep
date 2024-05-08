@@ -32,15 +32,16 @@
 	
 //endinterface : if_axis
 
-module lab4_source
+module lab4_source_shiftreg
 #(
     parameter G_BYT = 1,
-    parameter P_LEN = 14,
+    parameter P_LEN = 15,
     parameter CRC_WAIT=1
 )
 (
     input logic i_clk,                                                                 
-    input logic i_rst,                                                              
+    input logic i_rst,
+    input logic i_fifo_progfull,                                                              
     
     if_axis.m m_axis
      
@@ -56,9 +57,11 @@ module lab4_source
     reg [PACKET_WIDTH -1 :0] cnt;
     
     logic [G_BYT*8-1:0] o_crc_res_dat;
-    logic [G_BYT*8-1:0] i_crc_wrd_dat='0;
-    logic m_wrd_vld='0;
-    logic m_crc_rst='0;
+    logic [G_BYT*8-1:0] i_crc_wrd_dat = '0;
+    logic m_wrd_vld = '0;
+    logic m_crc_rst = '0;
+    byte m_data = '0;
+    logic m_dat_vld = '0;
     
     crc #(
         .POLY_WIDTH (8), // Size of The Polynomial Vector
@@ -83,17 +86,29 @@ module lab4_source
         .o_crc_res_dat(o_crc_res_dat)
     );
     
+    lab4_shiftreg#(
+        .PACKET_LEN(P_LEN+1)
+    )
+    u_shift(
+        .i_clk(i_clk),
+        .i_rst(i_rst),
+        .i_data(m_data),
+        .i_reg_vld(m_dat_vld),
+        .i_tready(m_axis.tready),
+        .o_data_vld(m_axis.tvalid),
+        .o_data(m_axis.tdata),
+        .o_data_tlast(m_axis.tlast)
+    );
+    
     enum logic [2:0] {S0 = 3'b00,
                      S1 = 3'b01,
                      S2 = 3'b10,
                      S3 = 3'b11} S;
     
     task make_valid;
-    if (m_axis.tready & !m_axis.tvalid)
-        m_axis.tvalid <= '1;
+    if (m_axis.tready & !m_dat_vld)
+        m_dat_vld <= '1;
     endtask
-    
-    
     
     always_ff @(posedge i_clk) begin
         
@@ -101,8 +116,8 @@ module lab4_source
             S <= S0;
             cnt=0;
             m_crc_rst='1;
-            m_axis.tvalid<='0;
-            m_axis.tdata<='0;
+            m_dat_vld<='0;
+            m_data<='0;
         end
         else
             case(S)
@@ -110,54 +125,57 @@ module lab4_source
                     
                     if (m_axis.tready) begin
                         S <= S1;
-                        m_axis.tvalid <= '0;
+                        m_dat_vld <= '0;
                         cnt<=0;   
                         m_crc_rst='1;
-                        m_axis.tlast <= '0;
+                        //m_axis.tlast <= '0;
                      end   
                 end
                 S1:begin //send data
                     
-                    if (m_axis.tready & !m_axis.tvalid) begin
-                        m_axis.tvalid <= '1;
+                    if (m_axis.tready & !m_dat_vld) begin
+                        m_dat_vld <= '1;
                         //m_wrd_vld<=1;
                     end
+                    
+                    if (m_axis.tready==0) m_dat_vld <= '0;
+                    
                     m_crc_rst='0;
                     //else m_wrd_vld<=0;
                     //m_axis.tvalid<=m_axis.tready ? '1 : '0;
                     //m_wrd_vld<=m_axis.tready ? '1 : '0;
                     
                     if (m_axis.tready & cnt<P_LEN) begin
-                        if (cnt==0) m_axis.tdata  <= 72;
-                        else if (cnt==1) m_axis.tdata  <= 10;
+                        if (cnt==0) m_data  <= 72;
+                        else if (cnt==1) m_data  <= P_LEN-2;
                         else begin 
                             m_wrd_vld<=m_axis.tready ? '1 : '0;
-                            m_axis.tdata  <= cnt-1;
+                            m_data  <= cnt-1;
                             i_crc_wrd_dat <= cnt-1;
                         end
                         cnt<=cnt+1;
                     end
                     
-                    if (m_axis.tvalid & m_axis.tready & cnt==P_LEN) begin
+                    if (m_dat_vld & m_axis.tready & cnt==P_LEN) begin
                         S <= S2;
-                        m_axis.tvalid <= '0;
+                        m_dat_vld <= '0;
                         //m_axis.tdata  <= o_crc_res_dat;
                         m_wrd_vld<=0;
                         cnt<='0;
                     end
                 end
                 S2:begin
-                    if (m_axis.tready & !m_axis.tvalid) begin
-                        m_axis.tvalid <= '1;
-                        m_axis.tlast <= '1;
+                    if (m_axis.tready & !m_dat_vld) begin
+                        m_dat_vld <= '1;
+                        //m_axis.tlast <= '1;
                     end
                     //Send CRC
                     
-                    m_axis.tdata  <= o_crc_res_dat;
+                    m_data  <= o_crc_res_dat;
                         
-                    if (m_axis.tvalid & m_axis.tready) begin
+                    if (m_dat_vld & m_axis.tready) begin
                         S <= S0;
-                        m_axis.tvalid <= '0;
+                        m_dat_vld <= '0;
                         cnt<='0;
                         
                     end

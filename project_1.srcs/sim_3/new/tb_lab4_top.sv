@@ -78,14 +78,14 @@ endtask
 int k = 0;
 initial begin
 // init
-	i_aresetn = '1;
+	i_aresetn = '0;
 	axis_init;
 	m_axis.tready = 1;
 	#(10*T_CLK);
 // reset FIFO (active-low)
+	i_aresetn = '1;
+	#(10*T_CLK);
 	i_aresetn = '0;
-	//#(10*T_CLK);
-	//i_aresetn = 1;
 	#(10*T_CLK);
 // send several packets
 	for (k = 0; k < 8; k++) begin
@@ -100,18 +100,18 @@ end
 // simulate clock
 always #(T_CLK/2.0) i_aclk = ~i_aclk;
 
-always #(T_CLK*296) begin
+always #(T_CLK*184) begin
     
     i_aresetn=rstreg;
     rstreg=rstreg<<<1;
     if (rstreg=='0) rstreg=1;
-    #1 i_aresetn='0;
+    #5 i_aresetn='0;
 
 end
 
 always #(T_CLK*196) begin
     
-    //i_ready=~i_ready;
+    i_ready=~i_ready;
 
 end
 
