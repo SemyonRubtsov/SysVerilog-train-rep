@@ -35,10 +35,11 @@
 module lab4_source
 #(
     parameter G_BYT = 1,
-    parameter P_LEN = 14,
+    parameter P_LEN_MAX = 63,
     parameter CRC_WAIT=1
 )
 (
+    input reg [5:0] i_p_len,
     input logic i_clk,                                                                 
     input logic i_rst,                                                              
     
@@ -51,7 +52,7 @@ module lab4_source
         m_axis.tdata='0;
     end;
     
-    localparam PACKET_WIDTH=int'($ceil($clog2(P_LEN+1)));
+    localparam PACKET_WIDTH=int'($ceil($clog2(P_LEN_MAX+1)));
     
     reg [PACKET_WIDTH -1 :0] cnt;
     
@@ -127,9 +128,9 @@ module lab4_source
                     //m_axis.tvalid<=m_axis.tready ? '1 : '0;
                     //m_wrd_vld<=m_axis.tready ? '1 : '0;
                     
-                    if (m_axis.tready & cnt<P_LEN) begin
+                    if (m_axis.tready & cnt<i_p_len) begin
                         if (cnt==0) m_axis.tdata  <= 72;
-                        else if (cnt==1) m_axis.tdata  <= 10;
+                        else if (cnt==1) m_axis.tdata  <= i_p_len;
                         else begin 
                             m_wrd_vld<=m_axis.tready ? '1 : '0;
                             m_axis.tdata  <= cnt-1;
@@ -138,7 +139,7 @@ module lab4_source
                         cnt<=cnt+1;
                     end
                     
-                    if (m_axis.tvalid & m_axis.tready & cnt==P_LEN) begin
+                    if (m_axis.tvalid & m_axis.tready & cnt==i_p_len) begin
                         S <= S2;
                         m_axis.tvalid <= '0;
                         //m_axis.tdata  <= o_crc_res_dat;

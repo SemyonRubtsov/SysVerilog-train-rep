@@ -41,16 +41,22 @@ parameter G_BYT = 1
 (
     input i_clk,
     input [2:0] i_rst,
-    input logic i_ready
+    input reg[5:0] i_p_len,
+    input logic i_ready,
+    output reg[5:0] o_p_len_sync
 );
+    
     
     if_axis #(.N(G_BYT), .I(0), .D(0), .U(0), .PAYMASK(7'b000_1001) ) src_fifo();
     //if_axis #(.N(G_BYT)) fifo();
     if_axis #(.N(G_BYT), .I(0), .D(0), .U(0), .PAYMASK(7'b000_1001) ) fifo_dst();
     
+    assign o_p_len_sync= (src_fifo.tlast | i_rst==7) ? i_p_len : o_p_len_sync;
+    
     lab4_source u_src(
         .i_clk(i_clk),
         .i_rst(i_rst[0]),
+        .i_p_len(o_p_len_sync),
         //.i_fifo_progfull(prog_full),
         .m_axis(src_fifo)             // output wire m_axis_tlast
     );
@@ -63,7 +69,7 @@ parameter G_BYT = 1
     );
     
 axis_fifo #(
-    .DEPTH(16), // Depth of fifo, minimum is 16, actual depth will be displayed in the information of module
+    .DEPTH(256), // Depth of fifo, minimum is 16, actual depth will be displayed in the information of module
     .PACKET_MODE("True"), // Packet mode, when true the FIFO outputs data only when a tlast is received or the FIFO has filled
     .MEM_STYLE("Distributed"), // Memory style: "Distributed" or "Block"
     .DUAL_CLOCK("False"), // Dual clock fifo: "True" or "False"

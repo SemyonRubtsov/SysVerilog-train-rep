@@ -45,6 +45,7 @@ logic [2:0] i_aresetn = '1; // asynchronous reset, active-low
 logic [2:0] rstreg = 1;
 logic i_aclk    = '0; // clock
 logic tb_dest_tready='1;
+reg [5:0] i_p_len=1;
 
 if_axis #(.N(G_BYT)) s_axis ();
 if_axis #(.N(G_BYT)) m_axis ();
@@ -100,6 +101,11 @@ end
 // simulate clock
 always #(T_CLK/2.0) i_aclk = ~i_aclk;
 
+always #(50) begin
+    i_p_len=i_p_len+3;
+    if (i_p_len=='0) i_p_len=1;
+end
+
 always #(T_CLK*184) begin
     
     i_aresetn=rstreg;
@@ -138,7 +144,7 @@ end
 lab4_top u_lab4 (
     .i_clk(i_aclk),
     .i_rst(i_aresetn),
-    
+    .i_p_len(i_p_len),
     .i_ready(i_ready)
 );
 
