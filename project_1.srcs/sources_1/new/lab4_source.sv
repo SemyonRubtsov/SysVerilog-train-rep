@@ -49,6 +49,7 @@ module lab4_source
     
     initial begin
         m_axis.tvalid='0;
+        m_axis.tlast='0;
         m_axis.tdata='0;
     end;
     
@@ -60,6 +61,7 @@ module lab4_source
     logic [G_BYT*8-1:0] i_crc_wrd_dat='0;
     logic m_wrd_vld='0;
     logic m_crc_rst='0;
+    reg[5:0] o_p_len_sync;
     
     crc #(
         .POLY_WIDTH (8), // Size of The Polynomial Vector
@@ -84,6 +86,8 @@ module lab4_source
         .o_crc_res_dat(o_crc_res_dat)
     );
     
+    assign o_p_len_sync = (m_axis.tlast | i_rst) ? i_p_len : o_p_len_sync;
+    
     enum logic [2:0] {S0 = 3'b00,
                      S1 = 3'b01,
                      S2 = 3'b10,
@@ -103,6 +107,7 @@ module lab4_source
             cnt=0;
             m_crc_rst='1;
             m_axis.tvalid<='0;
+            m_axis.tlast<='0;
             m_axis.tdata<='0;
         end
         else
@@ -128,9 +133,9 @@ module lab4_source
                     //m_axis.tvalid<=m_axis.tready ? '1 : '0;
                     //m_wrd_vld<=m_axis.tready ? '1 : '0;
                     
-                    if (m_axis.tready & cnt<i_p_len) begin
+                    if (m_axis.tready & cnt<o_p_len_sync) begin
                         if (cnt==0) m_axis.tdata  <= 72;
-                        else if (cnt==1) m_axis.tdata  <= i_p_len;
+                        else if (cnt==1) m_axis.tdata  <= o_p_len_sync;
                         else begin 
                             m_wrd_vld<=m_axis.tready ? '1 : '0;
                             m_axis.tdata  <= cnt-1;
@@ -139,7 +144,7 @@ module lab4_source
                         cnt<=cnt+1;
                     end
                     
-                    if (m_axis.tvalid & m_axis.tready & cnt==i_p_len) begin
+                    if (m_axis.tvalid & m_axis.tready & cnt==o_p_len_sync) begin
                         S <= S2;
                         m_axis.tvalid <= '0;
                         //m_axis.tdata  <= o_crc_res_dat;

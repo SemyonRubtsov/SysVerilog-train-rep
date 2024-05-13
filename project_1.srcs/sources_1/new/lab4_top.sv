@@ -42,21 +42,22 @@ parameter G_BYT = 1
     input i_clk,
     input [2:0] i_rst,
     input reg[5:0] i_p_len,
-    input logic i_ready,
-    output reg[5:0] o_p_len_sync
+    input logic i_ready
+    //output reg[5:0] o_p_len_sync
 );
     
+    //reg[5:0] o_p_len_sync;
     
     if_axis #(.N(G_BYT), .I(0), .D(0), .U(0), .PAYMASK(7'b000_1001) ) src_fifo();
     //if_axis #(.N(G_BYT)) fifo();
     if_axis #(.N(G_BYT), .I(0), .D(0), .U(0), .PAYMASK(7'b000_1001) ) fifo_dst();
     
-    assign o_p_len_sync= (src_fifo.tlast | i_rst==7) ? i_p_len : o_p_len_sync;
+    //assign o_p_len_sync = (src_fifo.tlast | i_rst==7) ? i_p_len : o_p_len_sync;
     
-    lab4_source u_src(
+    lab4_source_divided_FSM u_src(
         .i_clk(i_clk),
         .i_rst(i_rst[0]),
-        .i_p_len(o_p_len_sync),
+        .i_p_len(i_p_len),
         //.i_fifo_progfull(prog_full),
         .m_axis(src_fifo)             // output wire m_axis_tlast
     );

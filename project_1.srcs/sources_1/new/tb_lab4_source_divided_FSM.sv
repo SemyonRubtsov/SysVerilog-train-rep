@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 04/17/2024 08:40:52 PM
+// Create Date: 05/13/2024 05:37:11 PM
 // Design Name: 
-// Module Name: tb_lab4_source
+// Module Name: tb_lab4_source_divided_FSM
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -30,36 +30,25 @@
 //	modport m (input tready, output tvalid, tlast, tdata);
 //	modport s (output tready, input tvalid, tlast, tdata);
 	
-//endinterface
-
-//interface if_axis #(parameter int N = 1) ();
-//	localparam W = 8 * N; // TDATA bit width (N - number of bytes)
-	
-//	logic         tready;
-//	logic         tvalid;
-//	logic         tlast ;
-//	logic [W-1:0] tdata ;
-	
-//	modport m (input tready, output tvalid, tlast, tdata);
-//	modport s (output tready, input tvalid, tlast, tdata);
-	
 //endinterface : if_axis
 
-module tb_lab4_source
-#(
+module tb_lab4_source_divided_FSM #(
     parameter T_CLK = 1.0 // ns
 )
 (
     
 );
+
+    if_axis #(.N(1)) m_axis ();
     
     logic i_clk='0;logic i_rst='0;logic i_tready='1; logic tmp1='1;logic tmp2='0; reg [5:0] i_p_len=12;
-    if_axis m_axis();
+    //if_axis m_axis();
     
-    lab4_source u_src(
+    lab4_source_divided_FSM u_src(
         .i_rst(i_rst),
         .i_clk(i_clk),
         .i_p_len(i_p_len),
+        //.i_p_len(i_p_len),
         
         .m_axis(m_axis)
     );
@@ -68,7 +57,7 @@ module tb_lab4_source
     
     always #(T_CLK*1.9e1) tmp1 = ~tmp1;
     always #(T_CLK*2.7e1) tmp2 = ~tmp2;
-    assign m_axis.tready = tmp2 & tmp1;
+    assign m_axis.tready = '1;//tmp2 & tmp1;
     
     always #(T_CLK*200) i_p_len = i_p_len+1;
     

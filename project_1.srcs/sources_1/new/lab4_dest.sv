@@ -66,7 +66,7 @@ module lab4_dest#(
         .i_crc_a_clk_p(i_clk),
         .i_crc_s_rst_p(m_crc_rst),
         .i_crc_ini_vld('0),
-        .i_crc_wrd_vld(s_axis.tready & s_axis.tvalid & S),//m_receive),
+        .i_crc_wrd_vld(s_axis.tready & s_axis.tvalid & S & m_receive),//m_receive),
         .i_crc_ini_dat('0),
         .i_crc_wrd_dat(s_axis.tdata),
         .o_crc_wrd_rdy (),
