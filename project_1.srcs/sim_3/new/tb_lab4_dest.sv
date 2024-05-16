@@ -25,7 +25,7 @@ module tb_lab4_dest #(
     //if_axis.m m_axis
 );
 
-logic i_clk='1; reg [0:1] i_rst='0;
+logic i_clk='1; reg [0:1] i_rst='0; logic i_ready=1;
 
 int tst_crc_arr[18]={'h0, 'h7f, 'hbc, 'h30, 'hdd, 'ha3, 'hb5, 'h1b, 'h2d, 'hf0, 'h7, 'h83, 'h47, 'h61, 'h91, 'h3A, 'h27, 'hdd};
 
@@ -73,13 +73,14 @@ lab4_dest u_dest(
 
     .i_clk(i_clk),
     .i_rst(i_rst),
+    .i_ready(i_ready),
 
     .s_axis(m_axis)
 );
 
 always #(T_CLK/2) i_clk=~i_clk;
 
-//always #(T_CLK*20) send_packet(10);
+always #(T_CLK*20) i_ready=~i_ready;
 
 initial begin
     i_rst = '1;

@@ -43,9 +43,9 @@ parameter T_CLK = 1.0 // ns
 
 logic [2:0] i_aresetn = '1; // asynchronous reset, active-low
 logic [2:0] rstreg = 1;
-logic i_aclk    = '0; // clock
+logic i_aclk    = '1; // clock
 logic tb_dest_tready='1;
-reg [5:0] i_p_len=1;
+reg [5:0] i_p_len=4;
 
 if_axis #(.N(G_BYT)) s_axis ();
 if_axis #(.N(G_BYT)) m_axis ();
@@ -108,7 +108,7 @@ end
 
 always #(T_CLK*184) begin
     
-    i_aresetn=rstreg;
+    i_aresetn=0;
     rstreg=rstreg<<<1;
     if (rstreg=='0) rstreg=1;
     #5 i_aresetn='0;
@@ -141,7 +141,7 @@ end
 //  .prog_full(prog_full)                    // output wire prog_full
 //);
 
-lab4_top u_lab4 (
+lab4_source_dest u_lab4 (
     .i_clk(i_aclk),
     .i_rst(i_aresetn),
     .i_p_len(i_p_len),

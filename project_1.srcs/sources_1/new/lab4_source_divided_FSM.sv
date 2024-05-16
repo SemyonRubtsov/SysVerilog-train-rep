@@ -100,6 +100,10 @@ crc #(
 	endcase
 	end
 
+always_ff @(posedge !i_clk & m_axis.tready) begin
+if (q_timeout_cnt < o_p_len_sync+2)
+			q_timeout_cnt <= q_timeout_cnt + 1;
+end
 // FSM current state sync
 	always_ff @(posedge i_clk) begin
 		q_crnt_state <= (i_rst) ? S0 : w_next_state;
@@ -123,30 +127,50 @@ crc #(
 		m_crc_rst='0;
 		if (m_axis.tready & !m_axis.tvalid)
                         m_axis.tvalid <= '1;
-		if (m_axis.tready & q_timeout_cnt < o_p_len_sync+2)
-			q_timeout_cnt <= q_timeout_cnt + 1;
+        //m_axis.tvalid <= m_axis.tready;
+        //else m_axis.tvalid <= '0; 
 		
-		if (q_timeout_cnt==0) m_axis.tdata  <= 72;
-        else if (q_timeout_cnt==1) m_axis.tdata  <= o_p_len_sync;
+		if (q_timeout_cnt==1) m_axis.tdata  <= 72;
+        else if (q_timeout_cnt==2) m_axis.tdata  <= o_p_len_sync;
         else begin 
             m_wrd_vld<=m_axis.tready ? '1 : '0;
-            m_axis.tdata  <= q_timeout_cnt-1;
+            m_axis.tdata  <= q_timeout_cnt-2;
 		end
 		
-		if (m_axis.tvalid & m_axis.tready & q_timeout_cnt==o_p_len_sync+2) begin
+		if (m_axis.tready & m_axis.tvalid & q_timeout_cnt==o_p_len_sync+2) begin
             //m_wrd_vld<=0;
             m_axis.tvalid<=0;
 		end
 		end
 		
 		S2:begin
-            if (m_axis.tready & !m_axis.tvalid) begin
-                m_wrd_vld<=0;
-                m_axis.tvalid <= '1;
-                m_axis.tlast <= '1;
-            q_timeout_cnt <= '0;
+		    
+		    
+		    m_wrd_vld<=1;
+            if (m_axis.tready) begin
+            
+                m_axis.tvalid<=0;
+                
+                if (!m_axis.tvalid) begin
+                    m_wrd_vld<=0;
+                    m_axis.tvalid <= '1;
+                    m_axis.tlast <= '1;
+                    q_timeout_cnt <= '0;
+                end
+                
+                
             end
-            m_axis.tdata  <= o_crc_res_dat;
+            else
+                m_axis.tvalid<=1;
+            
+//            if (!m_axis.tready)
+//                m_axis.tvalid<=1;
+//            else
+//                m_axis.tvalid<=0;
+            
+            if (m_axis.tready)
+                m_axis.tdata  <= o_crc_res_dat;
+            else m_wrd_vld<=0;
             
         end
 		//else if (q_crnt_state != S1)
