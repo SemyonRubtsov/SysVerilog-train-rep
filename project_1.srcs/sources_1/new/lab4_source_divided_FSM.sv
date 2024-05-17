@@ -19,7 +19,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module lab4_source_divided_FSM #(
     parameter G_BYT = 1,
     parameter P_LEN_MAX = 63,
@@ -41,27 +40,18 @@ localparam C_CNT_WID=int'($ceil($clog2(P_LEN_MAX+1)));
 
 //assign o_p_len_sync = (m_axis.tlast | i_rst) ? i_p_len : o_p_len_sync;
 
-typedef enum {S0 = 3'b00,
-              S1 = 3'b01,
-              S2 = 3'b10,
-              S3 = 3'b11
+typedef enum {S0_READY,
+              S1_SND_PKT,
+              S2_SND_CRC
               } t_fsm_states;
 
-//typedef enum {
-//	S0_READY = 0,
-//	S1_BUSY  = 1,
-//	S2_PAUSE = 2,
-//	S3_DONE  = 3
-//} t_fsm_states;
-
-t_fsm_states w_next_state, q_crnt_state = S0;
+t_fsm_states w_next_state, q_crnt_state = S0_READY;
 
 //localparam C_CNT_WID = 4; // timeout counter bit width
 logic [C_CNT_WID-1:0] q_timeout_cnt = '1;
 wire [7:0] o_crc_res_dat;
 logic m_wrd_vld='0;
 logic m_crc_rst;
-logic m_wrd_vld;
 
 crc #(
         .POLY_WIDTH (8), // Size of The Polynomial Vector
@@ -87,97 +77,90 @@ crc #(
     );
 
 // FSM next state decode
-	always_comb begin
-		w_next_state = q_crnt_state;
-		case (q_crnt_state)
-		S0: if (m_axis.tready) begin
-                w_next_state = S1;
-                o_p_len_sync=i_p_len;
-			end
-		S1: w_next_state = (m_axis.tvalid & m_axis.tready & q_timeout_cnt==o_p_len_sync+2) ? S2 : S1;
-		S2: w_next_state = (!m_axis.tvalid & m_axis.tready) ? S0 : S2;
-		default : w_next_state = S0;
-	endcase
-	end
-
-always_ff @(posedge !i_clk & m_axis.tready) begin
-if (q_timeout_cnt < o_p_len_sync+2)
-			q_timeout_cnt <= q_timeout_cnt + 1;
+always_comb begin
+	w_next_state = q_crnt_state;
+	case (q_crnt_state)
+	S0_READY: if (m_axis.tready) begin
+               w_next_state = S1_SND_PKT;
+               o_p_len_sync=i_p_len;
+		end
+	S1_SND_PKT: w_next_state = (m_axis.tvalid & m_axis.tready & q_timeout_cnt==o_p_len_sync+2) ? S2_SND_CRC : S1_SND_PKT;
+	S2_SND_CRC: w_next_state = (!m_axis.tvalid & m_axis.tready) ? S0_READY : S2_SND_CRC;
+	default : w_next_state = S0_READY;
+endcase
 end
+
+// counter
+always_ff @(posedge !i_clk) begin // remove inversion?
+if (q_timeout_cnt < o_p_len_sync+2 & m_axis.tready)
+			q_timeout_cnt <= q_timeout_cnt + 1;
+			
+if (q_crnt_state==S0_READY) q_timeout_cnt <= '0;
+
+end
+
 // FSM current state sync
 	always_ff @(posedge i_clk) begin
-		q_crnt_state <= (i_rst) ? S0 : w_next_state;
+		q_crnt_state <= (i_rst) ? S0_READY : w_next_state;
 		
 		//if (m_axis.tready & !m_axis.tvalid)
         //                m_axis.tvalid <= '1;
     end
 
-// timeout counter
-	always_ff @(posedge i_clk) begin
-        case(q_crnt_state)
+// handle states
+always_ff @(posedge i_clk) begin
+       case(q_crnt_state)
+       
+       S0_READY:begin
+           m_crc_rst<='1;
+           //q_timeout_cnt <= '0;
+           m_axis.tvalid <= '0;
+           m_axis.tlast <= '0;
+       end
+       
+	S1_SND_PKT:begin
+	m_crc_rst='0;
+	if (m_axis.tready & !m_axis.tvalid)
+                       m_axis.tvalid <= '1;
+       //m_axis.tvalid <= m_axis.tready;
+       //else m_axis.tvalid <= '0; 
+	
+	if (q_timeout_cnt==1) m_axis.tdata  <= 72;
+       else if (q_timeout_cnt==2) m_axis.tdata  <= o_p_len_sync-1;
+       else begin 
+           m_wrd_vld<=m_axis.tready ? '1 : '0;
+           m_axis.tdata  <= q_timeout_cnt-2;
+	end
+	
+	if (m_axis.tready & m_axis.tvalid & q_timeout_cnt==o_p_len_sync+2) begin
+           //m_wrd_vld<=0;
+           m_axis.tvalid<=0;
+	end
+	end
+	
+	S2_SND_CRC:begin
+	    
+	    m_wrd_vld<=1;
+           if (m_axis.tready) begin
+           
+               m_axis.tvalid<=0;
+               
+               if (!m_axis.tvalid) begin
+                   m_wrd_vld<=0;
+                   m_axis.tvalid <= '1;
+                   m_axis.tlast <= '1;
+                   //q_timeout_cnt <= '0;
+               end
+               
+           end
+           else
+               m_axis.tvalid<=1;
         
-        S0:begin
-            m_crc_rst<='1;
-            q_timeout_cnt <= '0;
-            m_axis.tvalid <= '0;
-            m_axis.tlast <= '0;
-        end
+        if (m_axis.tready)
+            m_axis.tdata  <= o_crc_res_dat;
+        else m_wrd_vld<=0;
         
-		S1:begin
-		m_crc_rst='0;
-		if (m_axis.tready & !m_axis.tvalid)
-                        m_axis.tvalid <= '1;
-        //m_axis.tvalid <= m_axis.tready;
-        //else m_axis.tvalid <= '0; 
-		
-		if (q_timeout_cnt==1) m_axis.tdata  <= 72;
-        else if (q_timeout_cnt==2) m_axis.tdata  <= o_p_len_sync-1;
-        else begin 
-            m_wrd_vld<=m_axis.tready ? '1 : '0;
-            m_axis.tdata  <= q_timeout_cnt-2;
-		end
-		
-		if (m_axis.tready & m_axis.tvalid & q_timeout_cnt==o_p_len_sync+2) begin
-            //m_wrd_vld<=0;
-            m_axis.tvalid<=0;
-		end
-		end
-		
-		S2:begin
-		    
-		    
-		    m_wrd_vld<=1;
-            if (m_axis.tready) begin
-            
-                m_axis.tvalid<=0;
-                
-                if (!m_axis.tvalid) begin
-                    m_wrd_vld<=0;
-                    m_axis.tvalid <= '1;
-                    m_axis.tlast <= '1;
-                    q_timeout_cnt <= '0;
-                end
-                
-                
-            end
-            else
-                m_axis.tvalid<=1;
-            
-//            if (!m_axis.tready)
-//                m_axis.tvalid<=1;
-//            else
-//                m_axis.tvalid<=0;
-            
-            if (m_axis.tready)
-                m_axis.tdata  <= o_crc_res_dat;
-            else m_wrd_vld<=0;
-            
-        end
-		//else if (q_crnt_state != S1)
-			//q_timeout_cnt <= '0;
-        endcase;
     end
-// FSM output decode
-	//always_ff @(posedge i_clk)
-		//o_trfl_val[0] <= (q_crnt_state == S1);
+    endcase;
+end
 endmodule

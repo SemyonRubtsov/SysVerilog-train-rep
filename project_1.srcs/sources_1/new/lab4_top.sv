@@ -62,7 +62,7 @@ parameter G_BYT = 1
         .m_axis(src_fifo)             // output wire m_axis_tlast
     );
     
-    lab4_dest u_dst(
+    lab4_dest_v2 u_dst(
         .i_clk(i_clk),
         .i_rst(i_rst[2]),
         .i_ready(i_ready),

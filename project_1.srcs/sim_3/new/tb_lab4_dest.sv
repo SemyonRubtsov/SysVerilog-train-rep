@@ -69,7 +69,7 @@ task send_packet;
     end
 endtask
     
-lab4_dest u_dest(
+lab4_dest_v2 u_dest(
 
     .i_clk(i_clk),
     .i_rst(i_rst),
