@@ -106,16 +106,16 @@ always #(50) begin
     if (i_p_len=='0) i_p_len=1;
 end
 
-always #(T_CLK*184) begin
+always #(T_CLK*284) begin
     
-    i_aresetn=0;
+    i_aresetn=rstreg;
     rstreg=rstreg<<<1;
     if (rstreg=='0) rstreg=1;
     #5 i_aresetn='0;
 
 end
 
-always #(T_CLK*196) begin
+always #(T_CLK*26) begin
     
     i_ready=~i_ready;
 
@@ -141,7 +141,7 @@ end
 //  .prog_full(prog_full)                    // output wire prog_full
 //);
 
-lab4_source_dest u_lab4 (
+lab4_top u_lab4 (
     .i_clk(i_aclk),
     .i_rst(i_aresetn),
     .i_p_len(i_p_len),

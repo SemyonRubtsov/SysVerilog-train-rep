@@ -131,7 +131,7 @@ end
         //else m_axis.tvalid <= '0; 
 		
 		if (q_timeout_cnt==1) m_axis.tdata  <= 72;
-        else if (q_timeout_cnt==2) m_axis.tdata  <= o_p_len_sync;
+        else if (q_timeout_cnt==2) m_axis.tdata  <= o_p_len_sync-1;
         else begin 
             m_wrd_vld<=m_axis.tready ? '1 : '0;
             m_axis.tdata  <= q_timeout_cnt-2;

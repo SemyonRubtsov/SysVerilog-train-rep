@@ -129,7 +129,7 @@ module lab4_dest#(
                     
                     //m_crc_rst<='1;
                     
-                    if (s_axis.tvalid & s_axis.tready) begin
+                    if (s_axis.tvalid & s_axis.tready & !s_axis.tlast) begin
                        S <= 1;
                        //m_pkt_len<=s_axis.tdata;
                        m_byte_counter<=0;
@@ -200,7 +200,7 @@ module lab4_dest#(
     
     
     
-    always_ff @(posedge (S & i_clk)) begin
+    always_ff @(posedge (S & i_clk & s_axis.tready & !s_axis.tlast)) begin
     
     if (m_byte_counter == 0) begin
        m_pkt_len<=s_axis.tdata;
