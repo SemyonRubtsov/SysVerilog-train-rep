@@ -85,7 +85,10 @@ always_comb begin
                o_p_len_sync=i_p_len;
 		end
 	S1_SND_PKT: w_next_state = (m_axis.tvalid & m_axis.tready & q_timeout_cnt==o_p_len_sync+2) ? S2_SND_CRC : S1_SND_PKT;
-	S2_SND_CRC: w_next_state = (!m_axis.tvalid & m_axis.tready) ? S0_READY : S2_SND_CRC;
+	S2_SND_CRC: begin
+	   w_next_state = (!m_axis.tvalid & m_axis.tready) ? S0_READY : S2_SND_CRC;
+	   m_wrd_vld=0;
+	end
 	default : w_next_state = S0_READY;
 endcase
 end
@@ -128,7 +131,7 @@ always_ff @(posedge i_clk) begin
 	if (q_timeout_cnt==1) m_axis.tdata  <= 72;
        else if (q_timeout_cnt==2) m_axis.tdata  <= o_p_len_sync-1;
        else begin 
-           m_wrd_vld<=m_axis.tready ? '1 : '0;
+           m_wrd_vld<=(m_axis.tready) ? '1 : '0;
            m_axis.tdata  <= q_timeout_cnt-2;
 	end
 	
@@ -140,24 +143,28 @@ always_ff @(posedge i_clk) begin
 	
 	S2_SND_CRC:begin
 	    
-	    m_wrd_vld<=1;
-           if (m_axis.tready) begin
+	    //m_wrd_vld<=1;
+	    m_axis.tvalid<=m_axis.tready;
+	    m_wrd_vld<=0;
+//           if (m_axis.tready) begin
            
-               m_axis.tvalid<=0;
+//               m_axis.tvalid<=1;
                
-               if (!m_axis.tvalid) begin
-                   m_wrd_vld<=0;
-                   m_axis.tvalid <= '1;
-                   m_axis.tlast <= '1;
-                   //q_timeout_cnt <= '0;
-               end
-               
-           end
-           else
-               m_axis.tvalid<=1;
+//               if (!m_axis.tvalid) begin
+//                   m_wrd_vld<=0;
+//                   //m_axis.tvalid <= '1;
+//                   m_axis.tlast <= '1;
+//                   //q_timeout_cnt <= '0;
+//               end
+      //         
+//           end
+           //else
+               //m_axis.tvalid<=1;
         
-        if (m_axis.tready)
+        if (m_axis.tready) begin
             m_axis.tdata  <= o_crc_res_dat;
+            m_axis.tlast <= '1;
+        end
         else m_wrd_vld<=0;
         
     end

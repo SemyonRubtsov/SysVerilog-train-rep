@@ -53,7 +53,7 @@ module lab4_dest_v2#(
     int m_pkt_len;
     int m_byte_counter;
     logic m_crc_wrd_vld=0;
-    reg [7:0] q_data='0;
+    reg [8:0] q_data='0;
     
     reg [8:0] R_CRC='0;
     reg [8:0] C_CRC='0;
@@ -120,24 +120,36 @@ module lab4_dest_v2#(
         
         case(S)
             0: begin //ready
-                if (!s_axis.tready) s_axis.tready='1;
+                
+                //if (s_axis.tready & s_axis.tlast) s_axis.tready='0;
+            
+                if (!s_axis.tready & s_axis.tvalid) s_axis.tready='1;
+                
+                if (s_axis.tlast) s_axis.tready='0;
+                
+                
                 if (s_axis.tvalid & s_axis.tready & !s_axis.tlast) begin
                    S <= S1; // go to check header
                    m_byte_counter<=0;
                    m_cor_len<='0;
+                   //s_axis.tready<=0;
+                   //if (s_axis.tlast) s_axis.tready<=0;
                 end
                 //else S <= S0;
             end
             1: begin //check header
-                if (!s_axis.tready) s_axis.tready<=1;
+                if (!s_axis.tready & s_axis.tvalid) s_axis.tready<=1;
                 
                 if (q_data==72 & s_axis.tvalid & s_axis.tready & !s_axis.tlast) begin
                     S<=S2;
                     s_axis.tready<=0;
                 end
+                
+                if (s_axis.tlast) begin S<=S0; s_axis.tready<=0; m_crc_wrd_vld<=0; end
+                
             end
             2: begin //read len
-                if (!s_axis.tready) s_axis.tready<=1; 
+                if (!s_axis.tready & s_axis.tvalid) s_axis.tready<=1; 
                 
                 if (s_axis.tvalid & s_axis.tready & !s_axis.tlast) begin
                     S<=S3;
@@ -148,13 +160,15 @@ module lab4_dest_v2#(
                 end
             end
             3: begin
-                if (!s_axis.tready) begin s_axis.tready<=1; m_crc_rst='0; end
+                if (!s_axis.tready & s_axis.tvalid) begin s_axis.tready<=1; m_crc_rst='0; end
                 
-                if (s_axis.tready & m_byte_counter<m_pkt_len) begin
+                
+                if (s_axis.tready & s_axis.tvalid) begin
                     m_byte_counter<=m_byte_counter+1;
-                    m_crc_wrd_vld<=1;
+                    //m_crc_wrd_vld<=1;
                 end
-                //if (m_byte_counter!=0) m_crc_wrd_vld<=1;
+                
+                m_crc_wrd_vld<=s_axis.tready & s_axis.tvalid;
                 
                 if (s_axis.tvalid & s_axis.tready & s_axis.tlast & m_byte_counter==m_pkt_len) begin
                     S<=S4;
@@ -162,7 +176,25 @@ module lab4_dest_v2#(
                     m_crc_wrd_vld<=0;
                     s_axis.tready<=0;
                     //s_axis.tready<=0;
-                end  
+                end 
+                
+                if (s_axis.tvalid & s_axis.tready & (m_byte_counter>m_pkt_len|m_byte_counter==m_pkt_len) & !s_axis.tlast) begin
+                
+                    o_succes<='0;
+                    o_err<='1;
+                    S<=S0;
+                    //s_axis.tready <= '0;
+                    o_succes<='0;
+                    //o_err<='0;
+                    m_cor_len<='0;
+                    m_receive<='0;
+                    m_byte_counter<=0;
+                    m_pkt_len<=0;
+                    m_crc_wrd_vld<=0;
+                
+                end 
+                 
+                 
             end
             4: begin
                //if (!s_axis.tready) s_axis.tready<=1;
