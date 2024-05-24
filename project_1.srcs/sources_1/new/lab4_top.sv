@@ -41,8 +41,12 @@ parameter G_BYT = 1
 (
     input i_clk,
     input [2:0] i_rst,
-    input reg[5:0] i_p_len,
-    input logic i_ready
+    input reg[7:0] i_p_len,
+    input logic i_ready,
+    
+    output o_err_mlast,
+    output o_err_crc,
+    output o_err_ulast
     //output reg[5:0] o_p_len_sync
 );
     

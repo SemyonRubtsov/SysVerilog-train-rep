@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module tb_axil_fifo #(
+module tb_lab5_top #(
 	int G_RM_ADDR_W = 12, // AXIL xADDR bit width
 	int G_RM_DATA_B = 8, // AXIL xDATA number of bytes (B)
 	
@@ -123,6 +123,8 @@ module tb_axil_fifo #(
 		//t_axil_rd(.ADDR(RW_DWS_PRM)); #10;
 		
 		//t_axil_wr(.ADDR(RW_TRN_ENA), .DATA(1'b0)); #10; // 0 - truncation enable
+		t_axil_wr(.ADDR(0), .DATA(40)); #(dt*5);
+		t_axil_wr(.ADDR(4), .DATA({8'(0), 24'(625)})); #(dt*5);
 		t_axil_wr(.ADDR(WR_TRN_TBL), .DATA({8'(0), 24'(625)})); #(dt*5); // truncation table: 31:24 - scan mode id, 23:0 - max period?
 		t_axil_wr(.ADDR(WR_TRN_TBL), .DATA({8'(127), 24'(623)})); #(dt*5); // truncation table: 31:24 - scan mode id, 23:0 - max period?
 		t_axil_wr(.ADDR(RW_GLU_ENA), .DATA(1'b0)); #10; // 0 - gluing enable
@@ -323,22 +325,17 @@ module tb_axil_fifo #(
         m_axis.tdata    <= '0;
         m_axis.tlast    <=  0;
 
-            i_rst <= '0;
-        #2  i_rst <= '1;
+            i_rst <= '1;
+        #2  i_rst <= '0;
         
         
-
 	end
 
-	axil_fifo #(
-		.FEATURES			('{'1, '1, '1, '1, '1})
-	) axil_uut (
-		.s_axi_aclk_p      	(i_clk),
-		.m_axi_aclk_p      	(i_clk),
-		
-		.s_axi_arst_n		(i_rst[0]),
-		.m_axi_arst_n		(i_rst[1]),
-		.i_fifo_rst_n		(i_rst[2]),
+	lab5_top #(
+
+	) lab5_uut (
+		.i_clk(i_clk),
+        .i_rst(i_rst),
 
 		.s_axi				(s_axil),
 		.m_axi				(m_axil)

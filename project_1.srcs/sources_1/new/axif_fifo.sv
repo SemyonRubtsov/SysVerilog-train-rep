@@ -3,9 +3,9 @@
 // Engineer: Nickolay A. Sysoev
 // 
 // Create Date: 23/07/2019 16:42:27 PM
-// Module Name: axil_fifo
+// Module Name: axif_fifo
 // Tool Versions: SV 2012, Vivado 2018.3
-// Description: AXI4-Lite FIFO
+// Description: AXI4-Full FIFO
 // 
 // Dependencies: axi.sv
 // 
@@ -21,21 +21,16 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 (* KEEP_HIERARCHY = "Soft" *)
-module axil_fifo #(
+module axif_fifo #(
     parameter             DUAL_CLOCK = "False", // Dual clock fifo: "True" or "False"
     parameter   int       SYNC_STAGES = 2, // Number of synchronization stages in dual clock mode: [2, 3, 4]
-    parameter             RESET_SYNC = "True", // Asynchronous reset synchronization: "True" or "False"
-    parameter   int       DEPTH [5] = '{ 32, 32, 32, 32, 32 }, // Depth of fifos, minimum is 16, actual depth will be displayed in the information of module
-    parameter   string    MEM_STYLEA = "Distributed",
-    parameter   string    MEM_STYLEB = "Distributed",
-    parameter   string    MEM_STYLEC = "Distributed",
-    parameter   string    MEM_STYLED = "Distributed",
-    parameter   string    MEM_STYLEE = "Distributed",
-//    parameter             WA_MEM_STYLE = "Distributed", // Write address channel memory style: "Distributed" or "Block"
-//    parameter             WD_MEM_STYLE = "Distributed", // Write data channel memory style: "Distributed" or "Block"
-//    parameter             WR_MEM_STYLE = "Distributed", // Write response channel memory style: "Distributed" or "Block"
-//    parameter             RA_MEM_STYLE = "Distributed", // Read address channel memory style: "Distributed" or "Block"
-//    parameter             RD_MEM_STYLE = "Distributed", // Read data channel memory style: "Distributed" or "Block"
+    parameter             RESET_SYNC = "False", // Asynchronous reset synchronization: "True" or "False"
+    parameter   int       DEPTH [5] = '{ 32, 512, 32, 32, 512 }, // Depth of fifos, minimum is 16, actual depth will be displayed in the information of module
+    parameter             WA_MEM_STYLE = "Distributed", // Write address channel memory style: "Distributed" or "Block"
+    parameter             WD_MEM_STYLE = "Distributed", // Write data channel memory style: "Distributed" or "Block"
+    parameter             WR_MEM_STYLE = "Distributed", // Write response channel memory style: "Distributed" or "Block"
+    parameter             RA_MEM_STYLE = "Distributed", // Read address channel memory style: "Distributed" or "Block"
+    parameter             RD_MEM_STYLE = "Distributed", // Read data channel memory style: "Distributed" or "Block"
     parameter   bit [5:0] FEATURES [5] = '{ '0,'0,'0,'0,'0 }, // Advanced features: [ read count, prog. empty, almost empty, write count, prog. full, almost full ]     
     parameter   int       PROG_FULL [5] = '{ 12, 12, 12, 12, 12 }, // Programmable full threshold
     parameter   int       PROG_EMPTY [5] = '{ 4, 4, 4, 4, 4 }, // Programmable empty threshold
@@ -46,12 +41,12 @@ module axil_fifo #(
     input   wire              s_axi_aclk_p, // Rising edge slave clock
     input   wire              s_axi_arst_n, // Reset synchronous to slave clock, connect only when reset synchronization is false, active low
 
-    if_axil.s                 s_axi, // AXI4-Lite slave interface
+    if_axif.s                 s_axi, // AXI4-Full slave interface
 
     input   wire              m_axi_aclk_p, // Rising edge master clock
     input   wire              m_axi_arst_n, // Reset synchronous to master clock, connect only when reset synchronization is false, active low
 
-    if_axil.m                 m_axi, // AXI4-Lite master interface
+    if_axif.m                 m_axi, // AXI4-Full master interface
 
     output  wire              o_wa_a_tfull, // Write address channel almost full flag
     output  wire              o_wa_p_tfull, // Write address channel programmable full flag
@@ -92,15 +87,15 @@ module axil_fifo #(
   // Parameters Check
   initial begin : check_param    
     if ( s_axi.WA_PAYLOAD != m_axi.WA_PAYLOAD )
-      $warning("[%s %0d-%0d] WA payload width between slave (%d) and master (%d) interfaces are different. %m", "AXIL_FIFO", 1, 1, s_axi.WA_PAYLOAD, m_axi.WA_PAYLOAD);
+      $warning("[%s %0d-%0d] WA payload width between slave (%d) and master (%d) interfaces are different. %m", "AXIF_FIFO", 1, 1, s_axi.WA_PAYLOAD, m_axi.WA_PAYLOAD);
     if ( s_axi.WD_PAYLOAD != m_axi.WD_PAYLOAD )
-      $warning("[%s %0d-%0d] WD payload width between slave (%d) and master (%d) interfaces are different. %m", "AXIL_FIFO", 1, 2, s_axi.WD_PAYLOAD, m_axi.WD_PAYLOAD);
+      $warning("[%s %0d-%0d] WD payload width between slave (%d) and master (%d) interfaces are different. %m", "AXIF_FIFO", 1, 2, s_axi.WD_PAYLOAD, m_axi.WD_PAYLOAD);
     if ( s_axi.WR_PAYLOAD != m_axi.WR_PAYLOAD )
-      $warning("[%s %0d-%0d] WR payload width between slave (%d) and master (%d) interfaces are different. %m", "AXIL_FIFO", 1, 3, s_axi.WR_PAYLOAD, m_axi.WR_PAYLOAD);
+      $warning("[%s %0d-%0d] WR payload width between slave (%d) and master (%d) interfaces are different. %m", "AXIF_FIFO", 1, 3, s_axi.WR_PAYLOAD, m_axi.WR_PAYLOAD);
     if ( s_axi.RA_PAYLOAD != m_axi.RA_PAYLOAD )
-      $warning("[%s %0d-%0d] RA payload width between slave (%d) and master (%d) interfaces are different. %m", "AXIL_FIFO", 1, 4, s_axi.RA_PAYLOAD, m_axi.RA_PAYLOAD);
+      $warning("[%s %0d-%0d] RA payload width between slave (%d) and master (%d) interfaces are different. %m", "AXIF_FIFO", 1, 4, s_axi.RA_PAYLOAD, m_axi.RA_PAYLOAD);
     if ( s_axi.RD_PAYLOAD != m_axi.RD_PAYLOAD )
-      $warning("[%s %0d-%0d] RD payload width between slave (%d) and master (%d) interfaces are different. %m", "AXIL_FIFO", 1, 5, s_axi.RD_PAYLOAD, m_axi.RD_PAYLOAD);
+      $warning("[%s %0d-%0d] RD payload width between slave (%d) and master (%d) interfaces are different. %m", "AXIF_FIFO", 1, 5, s_axi.RD_PAYLOAD, m_axi.RD_PAYLOAD);
   end : check_param
 
   localparam int PW [5] = { s_axi.WA_PAYLOAD, s_axi.WD_PAYLOAD, s_axi.WR_PAYLOAD, s_axi.RA_PAYLOAD, s_axi.RD_PAYLOAD };
@@ -118,14 +113,14 @@ module axil_fifo #(
     .DW ( PW[0] ),
     .DEPTH ( DEPTH[0] ),
     .FWFT ( "True" ),
-    .MEM_STYLE ( MEM_STYLEA ),
-//    .MEM_STYLE ( WA_MEM_STYLE ),
+    .MEM_STYLE ( WA_MEM_STYLE ),
     .DUAL_CLOCK ( DUAL_CLOCK ),
     .SYNC_STAGES ( SYNC_STAGES ),
     .RESET_SYNC ( RESET_SYNC ),
     .PROG_FULL ( PROG_FULL[0] ),
     .PROG_EMPTY ( PROG_EMPTY[0] ),
-    .FEATURES ( { 1'b1, FEATURES[0][5:3], 1'b1, FEATURES[0][2:0] } )
+    .FEATURES ( { 1'b1, FEATURES[0][5:3], 1'b1, FEATURES[0][2:0] } ),
+    .CW ( CW[0] )
   ) u_wa_fifo (
     .i_fifo_a_rst_p (!i_fifo_rst_n ),
     .i_fifo_w_rst_p (!s_axi_arst_n ),
@@ -148,7 +143,7 @@ module axil_fifo #(
   );
 
   // Write Data Channel
-  logic [PW[1]-1:0] s_wd_payload;
+  logic [PW[1]-1:0] s_wd_payload; 
   always_comb
     s_wd_payload = s_axi.wd_payload();
 
@@ -160,14 +155,14 @@ module axil_fifo #(
     .DW ( PW[1] ),
     .DEPTH ( DEPTH[1] ),
     .FWFT ( "True" ),
-    .MEM_STYLE ( MEM_STYLEB ),
-//    .MEM_STYLE ( WD_MEM_STYLE ),
+    .MEM_STYLE ( WD_MEM_STYLE ),
     .DUAL_CLOCK ( DUAL_CLOCK ),
     .SYNC_STAGES ( SYNC_STAGES ),
     .RESET_SYNC ( RESET_SYNC ),
     .PROG_FULL ( PROG_FULL[1] ),
     .PROG_EMPTY ( PROG_EMPTY[1] ),
-    .FEATURES ( { 1'b1, FEATURES[1][5:3], 1'b1, FEATURES[1][2:0] } )
+    .FEATURES ( { 1'b1, FEATURES[1][5:3], 1'b1, FEATURES[1][2:0] } ),
+    .CW ( CW[1] )
   ) u_wd_fifo (
     .i_fifo_a_rst_p (!i_fifo_rst_n ),
     .i_fifo_w_rst_p (!s_axi_arst_n ),
@@ -202,14 +197,14 @@ module axil_fifo #(
     .DW ( PW[2] ),
     .DEPTH ( DEPTH[2] ),
     .FWFT ( "True" ),
-    .MEM_STYLE ( MEM_STYLEC ),
-//    .MEM_STYLE ( WR_MEM_STYLE ),
+    .MEM_STYLE ( WR_MEM_STYLE ),
     .DUAL_CLOCK ( DUAL_CLOCK ),
     .SYNC_STAGES ( SYNC_STAGES ),
     .RESET_SYNC ( RESET_SYNC ),
     .PROG_FULL ( PROG_FULL[2] ),
     .PROG_EMPTY ( PROG_EMPTY[2] ),
-    .FEATURES ( { 1'b1, FEATURES[2][5:3], 1'b1, FEATURES[2][2:0] } )
+    .FEATURES ( { 1'b1, FEATURES[2][5:3], 1'b1, FEATURES[2][2:0] } ),
+    .CW ( CW[2] )
   ) u_wr_fifo (
     .i_fifo_a_rst_p (!i_fifo_rst_n ),
     .i_fifo_w_rst_p (!m_axi_arst_n ),
@@ -232,7 +227,7 @@ module axil_fifo #(
   );
 
   // Read Address Channel
-  logic [PW[3]-1:0] s_ra_payload;
+  logic [PW[3]-1:0] s_ra_payload; 
   always_comb
     s_ra_payload = s_axi.ra_payload();
 
@@ -244,14 +239,14 @@ module axil_fifo #(
     .DW ( PW[3] ),
     .DEPTH ( DEPTH[3] ),
     .FWFT ( "True" ),
-    .MEM_STYLE ( MEM_STYLED ),
-//    .MEM_STYLE ( RA_MEM_STYLE ),
+    .MEM_STYLE ( RA_MEM_STYLE ),
     .DUAL_CLOCK ( DUAL_CLOCK ),
     .SYNC_STAGES ( SYNC_STAGES ),
     .RESET_SYNC ( RESET_SYNC ),
     .PROG_FULL ( PROG_FULL[3] ),
     .PROG_EMPTY ( PROG_EMPTY[3] ),
-    .FEATURES ( { 1'b1, FEATURES[3][5:3], 1'b1, FEATURES[3][2:0] } )
+    .FEATURES ( { 1'b1, FEATURES[3][5:3], 1'b1, FEATURES[3][2:0] } ),
+    .CW ( CW[3] )
   ) u_ra_fifo (
     .i_fifo_a_rst_p (!i_fifo_rst_n ),
     .i_fifo_w_rst_p (!s_axi_arst_n ),
@@ -286,14 +281,14 @@ module axil_fifo #(
     .DW ( PW[4] ),
     .DEPTH ( DEPTH[4] ),
     .FWFT ( "True" ),
-    .MEM_STYLE ( MEM_STYLEE ),
-//    .MEM_STYLE ( RD_MEM_STYLE ),
+    .MEM_STYLE ( RD_MEM_STYLE ),
     .DUAL_CLOCK ( DUAL_CLOCK ),
     .SYNC_STAGES ( SYNC_STAGES ),
     .RESET_SYNC ( RESET_SYNC ),
     .PROG_FULL ( PROG_FULL[4] ),
     .PROG_EMPTY ( PROG_EMPTY[4] ),
-    .FEATURES ( { 1'b1, FEATURES[4][5:3], 1'b1, FEATURES[4][2:0] } )
+    .FEATURES ( { 1'b1, FEATURES[4][5:3], 1'b1, FEATURES[4][2:0] } ),
+    .CW ( CW[4] )
   ) u_rd_fifo (
     .i_fifo_a_rst_p (!i_fifo_rst_n ),
     .i_fifo_w_rst_p (!m_axi_arst_n ),
@@ -315,4 +310,4 @@ module axil_fifo #(
     .o_fifo_r_count ( o_rd_r_count ) 
   );
 
-endmodule : axil_fifo
+endmodule : axif_fifo
