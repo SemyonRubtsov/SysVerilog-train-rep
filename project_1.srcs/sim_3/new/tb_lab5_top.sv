@@ -2,7 +2,7 @@
 
 module tb_lab5_top #(
 	int G_RM_ADDR_W = 12, // AXIL xADDR bit width
-	int G_RM_DATA_B = 8, // AXIL xDATA number of bytes (B)
+	int G_RM_DATA_B = 4, // AXIL xDATA number of bytes (B)
 	
 	int G_CG_L      = 39 * 8, // codogram length (L), bytes
 	int G_USER_W    = 1, // sync-pulse-as-TUSER bit width (W)
@@ -131,10 +131,14 @@ module tb_lab5_top #(
 		//t_axil_wr(.ADDR(RW_GLU_ENA), .DATA(1'b0)); #10; // 0 - gluing enable
 	
 		//t_axil_rd(.ADDR(RW_TRN_ENA)); #10;
-		t_axil_rd(.ADDR(WR_TRN_TBL),.DATA(t_data)); #10;
-		t_axil_rd(.ADDR(RW_GLU_ENA),.DATA(t_data)); #10;
-		t_axil_rd(.ADDR(RW_GLU_OFS),.DATA(t_data)); #10;
-		t_axil_rd(.ADDR(RW_DWS_PRM),.DATA(t_data)); #10;
+		t_axil_rd(.ADDR(0),.DATA(t_data)); #(dt*5);
+		t_axil_rd(.ADDR(4),.DATA(t_data)); #(dt*5);
+		t_axil_rd(.ADDR(0),.DATA(t_data)); #(dt*5);
+		t_axil_wr(.ADDR(0), .DATA(20)); #(dt*25);
+		//t_axil_rd(.ADDR(4),.DATA(t_data)); #(dt*5);
+		t_axil_rd(.ADDR(0),.DATA(t_data)); #(dt*5);
+		//t_axil_rd(.ADDR(RW_GLU_OFS),.DATA(t_data)); #10;
+		//t_axil_rd(.ADDR(RW_DWS_PRM),.DATA(t_data)); #10;
 
 	end
 

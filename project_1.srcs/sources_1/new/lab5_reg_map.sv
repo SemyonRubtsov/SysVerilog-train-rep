@@ -53,12 +53,20 @@ module lab5_reg_map #(
     t_xaddr q_wr_addr;
     t_xdata q_wr_data;
     
+    t_xaddr q_rd_addr;
+    t_xdata q_rd_data;
+    
 	always_ff @(posedge i_clk) begin
 	   
 	   if (!i_rst) begin
 	       s_axi.awready<='1; 
-	       s_axi.wready<='1; 
+	       s_axi.arready<='1; 
+	       s_axi.wready<='1;
+	       
+	       s_axi.rvalid<='0; 
 	   end
+	   
+	   //------------------------------------write in regs---------------------------------
 	   
 	   if (s_axi.awvalid & s_axi.awready)
 	       q_wr_addr<=s_axi.awaddr;
@@ -77,7 +85,47 @@ module lab5_reg_map #(
 	   
 	   o_err<={6'b0,i_err_mtlast,6'b0,i_err_crc,6'b0,i_err_utlast};
 	   
+	   //-----------------------------------------------------------------------------------
+	   
+	   //--------------------------------------read from regs----------------------------------
+	   
+	   if (s_axi.arvalid & s_axi.arready) begin
+	       s_axi.arready<='0;
+	       q_rd_addr<=s_axi.araddr;
+	   end
+	   //if (s_axi.rvalid & s_axi.rready) begin
+	   //    q_wr_data<=s_axi.wdata;
+	   //    s_axi.wready<=0;
+	   //end
+	   
+	   if (s_axi.arvalid) begin
+	       //s_axil.wready<=0;
+	       case(q_rd_addr)
+	           LEN_ADDR: begin q_rd_data<=o_lenght; end
+	           ERR_ADDR: begin q_rd_data<=o_err; end
+	       endcase
+	   end
+	   
+	   if (s_axi.rready) begin
+	       s_axi.rdata<=q_rd_data;
+	       s_axi.rvalid<='1;
+	       //s_axi.rvalid<=s_axi.rready;
+	       //s_axi.rvalid <= 0;
+	   end
+	   
+	   //if (s_axi.rready & s_axi.rvalid) begin
+	       //s_axi.rvalid<='0;
+	   //end
+	   
+	   //s_axi.rvalid<=s_axi.rready;
+	   //if (s_axi.rready) s_axi.rvalid<=1;
+	   
+	   //o_err<={6'b0,i_err_mtlast,6'b0,i_err_crc,6'b0,i_err_utlast};
+	   
+	   //------------------------------------------------------------------------------------
+	   
 	   if (i_rst) begin
+	       s_axi.rvalid<='0; 
 	       q_wr_data<=0;
 	       q_wr_addr<=0;
 	       o_lenght<=10;

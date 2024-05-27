@@ -193,7 +193,20 @@ module lab4_dest_v2#(
                     m_crc_wrd_vld<=0;
                 
                 end 
-                 
+                
+                if (s_axis.tvalid & s_axis.tready & m_byte_counter<m_pkt_len & s_axis.tlast) begin
+                    o_succes<='0;
+                    o_err_utlast<='1;
+                    S<=S0;
+                    //s_axis.tready <= '0;
+                    o_succes<='0;
+                    //o_err<='0;
+                    m_cor_len<='0;
+                    m_receive<='0;
+                    m_byte_counter<=0;
+                    m_pkt_len<=0;
+                    m_crc_wrd_vld<=0;
+                end
                  
             end
             4: begin
