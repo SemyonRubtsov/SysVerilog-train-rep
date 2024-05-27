@@ -571,7 +571,7 @@ endinterface : if_axif
 //    A - Address Width;
 //    PAYMASK - Payload Mask: { awprot, wstrb, bresp, arprot, rresp }
 
-interface if_axil #( parameter int N = 8, A = 16, bit [0:4] PAYMASK = '1 ) ();
+interface if_axil #( parameter int N = 4, A = 16, bit [0:4] PAYMASK = '1 ) ();
 
   import axi::*;
 

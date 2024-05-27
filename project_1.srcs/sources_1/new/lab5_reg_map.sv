@@ -22,7 +22,7 @@
 
 module lab5_reg_map #(
     int G_RM_ADDR_W = 4, // AXIL xADDR bit width
-    int G_RM_DATA_B = 8 // AXIL xDATA number of bytes (B)
+    int G_RM_DATA_B = 4 // AXIL xDATA number of bytes (B)
 )(
 
     input i_rst,
@@ -132,8 +132,6 @@ module lab5_reg_map #(
 	       S<=S0_ADDR_READY;
 	       q_wr_addr<=0;
 	   end
-	   
-	   
 	   
 	end	
     

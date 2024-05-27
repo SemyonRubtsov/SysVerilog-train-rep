@@ -115,7 +115,7 @@ module tb_lab5_top #(
 
 	initial begin
 		
-		t_axil_init; #20;
+		t_axil_init; #10;
 		m_axil.bvalid='1;
 		//t_axil_rd(.ADDR(RW_TRN_ENA)); #10;
 		//t_axil_rd(.ADDR(WR_TRN_TBL)); #10;
@@ -124,10 +124,14 @@ module tb_lab5_top #(
 		//t_axil_rd(.ADDR(RW_DWS_PRM)); #10;
 		
 		//t_axil_wr(.ADDR(RW_TRN_ENA), .DATA(1'b0)); #10; // 0 - truncation enable
-		t_axil_wr(.ADDR(0), .DATA(40)); #(dt*5);
-		t_axil_wr(.ADDR(4), .DATA({8'(0), 24'(625)})); #(dt*5);
-		t_axil_wr(.ADDR(WR_TRN_TBL), .DATA({8'(0), 24'(625)})); #(dt*5); // truncation table: 31:24 - scan mode id, 23:0 - max period?
-		t_axil_wr(.ADDR(WR_TRN_TBL), .DATA({8'(127), 24'(623)})); #(dt*5); // truncation table: 31:24 - scan mode id, 23:0 - max period?
+		t_axil_wr(.ADDR(0), .DATA(40)); #(15);
+		//t_axil_wr(.ADDR(4), .DATA({8'(0), 24'(625)})); #(15);
+		t_axil_wr(.ADDR(0), .DATA(30)); #(15);
+		t_axil_wr(.ADDR(0), .DATA(15)); #(15);
+		t_axil_wr(.ADDR(0), .DATA(5)); #(15);
+		//t_axil_wr(.ADDR(0), .DATA(25)); #(dt*5);
+		//t_axil_wr(.ADDR(WR_TRN_TBL), .DATA({8'(0), 24'(625)})); #(dt*5); // truncation table: 31:24 - scan mode id, 23:0 - max period?
+		//t_axil_wr(.ADDR(WR_TRN_TBL), .DATA({8'(127), 24'(623)})); #(dt*5); // truncation table: 31:24 - scan mode id, 23:0 - max period?
 		//t_axil_wr(.ADDR(RW_GLU_ENA), .DATA(1'b0)); #10; // 0 - gluing enable
 	
 		//t_axil_rd(.ADDR(RW_TRN_ENA)); #10;

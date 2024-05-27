@@ -22,7 +22,7 @@
 
 module lab5_top #(
 	int G_RM_ADDR_W = 12, // AXIL xADDR bit width
-	int G_RM_DATA_B = 8 // AXIL xDATA number of bytes (B)
+	int G_RM_DATA_B = 4 // AXIL xDATA number of bytes (B)
 	
 	//int G_CG_L      = 39 * 8, // codogram length (L), bytes
 	//int G_USER_W    = 1, // sync-pulse-as-TUSER bit width (W)
