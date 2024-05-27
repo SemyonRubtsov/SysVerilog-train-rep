@@ -70,7 +70,10 @@ parameter G_BYT = 1
         .i_clk(i_clk),
         .i_rst(i_rst[2]),
         .i_ready(i_ready),
-        .s_axis(fifo_dst)
+        .s_axis(fifo_dst),
+        .o_err_mtlast(o_err_mlast),
+        .o_err_utlast(o_err_ulast),
+        .o_err_crc(o_err_crc)
     );
     
 axis_fifo #(

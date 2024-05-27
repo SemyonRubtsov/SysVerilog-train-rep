@@ -36,7 +36,7 @@ module lab4_dest_v2#(
     input i_rst,
     input logic i_ready,
    
-    output logic o_err,
+    output logic o_err_mtlast, o_err_utlast, o_err_crc,
     output logic o_succes,
     
     if_axis.s s_axis              // input wire s_axis_tlast
@@ -181,7 +181,7 @@ module lab4_dest_v2#(
                 if (s_axis.tvalid & s_axis.tready & (m_byte_counter>m_pkt_len|m_byte_counter==m_pkt_len) & !s_axis.tlast) begin
                 
                     o_succes<='0;
-                    o_err<='1;
+                    o_err_mtlast<='1;
                     S<=S0;
                     //s_axis.tready <= '0;
                     o_succes<='0;
@@ -201,8 +201,8 @@ module lab4_dest_v2#(
                q_data<=q_data;
                //if (m_byte_counter==m_pkt_len) R_CRC <= q_data; //s_axis.tready<=1;
                
-               if (o_crc_res_dat == q_data) begin o_succes='1; o_err='0; end 
-               if (o_crc_res_dat != q_data) begin o_succes='0; o_err='1; end 
+               if (o_crc_res_dat == q_data) begin o_succes='1; o_err_crc='0; o_err_mtlast='0; o_err_utlast='0; end 
+               if (o_crc_res_dat != q_data) begin o_succes='0; o_err_crc='1; end 
                
                if (s_axis.tvalid & R_CRC!=72) begin
                     S<=S0;
@@ -217,7 +217,9 @@ module lab4_dest_v2#(
             S<=S0;
             s_axis.tready <= '0;
             o_succes<='0;
-            o_err<='0;
+            o_err_crc<='0;
+            o_err_mtlast<='0;
+            o_err_utlast<='0;
             m_cor_len<='0;
             m_receive<='0;
             m_byte_counter<=0;

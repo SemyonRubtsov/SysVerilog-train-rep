@@ -33,7 +33,7 @@ module lab5_top #(
 	//real dt = 1.0 // clock period ns);
 ) (
     input i_clk,
-    input i_rst,
+    input [3:0] i_rst,
     
     if_axil.s                 s_axi, // AXI4-Lite slave interface
     if_axil.m                 m_axi // AXI4-Lite master interface
@@ -49,7 +49,7 @@ module lab5_top #(
     
     lab5_reg_map u_reg_map(
         .i_clk(i_clk),
-        .i_rst(i_rst),
+        .i_rst(i_rst[0]),
         .o_lenght(q_p_len),
         .i_err_mtlast(q_err_mtlast),
         .i_err_crc(q_err_crc),
@@ -61,10 +61,11 @@ module lab5_top #(
     
     lab4_top u_lab4(
         .i_clk(i_clk),
-        .i_rst({3{i_rst}}),
+        .i_rst(i_rst[3:1]),
         .i_p_len(q_p_len[7:0]),
         .o_err_mlast(q_err_mtlast),
         .o_err_crc(q_err_crc),
         .o_err_ulast(q_err_utlast)
     );
+    
 endmodule

@@ -18,10 +18,11 @@ module tb_lab5_top #(
 	localparam C_CG_DATA_W = 8 * G_CG_DATA_B; // codogram TDATA bit width
 	localparam C_DG_DATA_W = 8 * G_DG_DATA_B; // datagram TDATA bit width
 
-	reg [2 : 0] i_rst = 1;
+	reg [3 : 0] i_rst = 1;
 	reg [C_CG_DATA_W-1:0] v_cdg_ram [0:8*G_CG_L-1];// = '{default: '0}; 
 	logic i_fifo_reset;
-	logic i_clk	= 1; 
+	logic i_clk	= 1;
+	//i_rst
 
 	int tst_crc_arr[24] = { 'h1 , 'h0 , 'h7f, 'hbc, 'h30, 'hdd, 'ha3, 'hb5, 
                         //  -     01    02    03    04    05    06    07
@@ -127,7 +128,7 @@ module tb_lab5_top #(
 		t_axil_wr(.ADDR(4), .DATA({8'(0), 24'(625)})); #(dt*5);
 		t_axil_wr(.ADDR(WR_TRN_TBL), .DATA({8'(0), 24'(625)})); #(dt*5); // truncation table: 31:24 - scan mode id, 23:0 - max period?
 		t_axil_wr(.ADDR(WR_TRN_TBL), .DATA({8'(127), 24'(623)})); #(dt*5); // truncation table: 31:24 - scan mode id, 23:0 - max period?
-		t_axil_wr(.ADDR(RW_GLU_ENA), .DATA(1'b0)); #10; // 0 - gluing enable
+		//t_axil_wr(.ADDR(RW_GLU_ENA), .DATA(1'b0)); #10; // 0 - gluing enable
 	
 		//t_axil_rd(.ADDR(RW_TRN_ENA)); #10;
 		t_axil_rd(.ADDR(WR_TRN_TBL),.DATA(t_data)); #10;
@@ -328,8 +329,28 @@ module tb_lab5_top #(
             i_rst <= '1;
         #2  i_rst <= '0;
         
+        //#20  i_rst <= 0001;
+//        #80  i_rst <= 0010;
+//        #84  i_rst <= '0;
+//        #100  i_rst <= 0100;
+//        #104  i_rst <= '0;
+//        #120  i_rst <= 1000;
+//        #124  i_rst <= '0;
+        
+        //#140  i_rst <= '0;
         
 	end
+	
+    logic [3:0] rstreg=4'b0010;
+    
+    always #(T_CLK*284) begin
+    
+    i_rst=rstreg;
+    rstreg=rstreg<<<1;
+    if (rstreg==0) rstreg=4'b0010;
+    #5 i_rst='0;
+
+    end
 
 	lab5_top #(
 

@@ -29,7 +29,7 @@ module lab5_reg_map #(
     input i_clk,
     output reg [31:0] o_lenght,
     output reg [31:0] o_err,
-    input i_err_mtlast,i_err_crc,i_err_utlast,
+    input logic i_err_mtlast,i_err_crc,i_err_utlast,
     
     if_axil.s s_axi, // AXI4-Lite slave interface
     if_axil.m m_axi // AXI4-Lite master interface
@@ -54,26 +54,38 @@ module lab5_reg_map #(
     t_xdata q_wr_data;
     
 	always_ff @(posedge i_clk) begin
-	
-	   if (s_axil.awvalid & s_axil.awready) q_wr_addr=s_axil.awaddr;
 	   
-	   if (s_axil.wvalid & s_axil.wready) q_wr_data=s_axil.wdata;
+	   if (!i_rst) begin
+	       s_axi.awready<='1; 
+	       s_axi.wready<='1; 
+	   end
 	   
-	   if (s_axil.wvalid) begin
-	       case(s_axil.awaddr)
+	   if (s_axi.awvalid & s_axi.awready)
+	       q_wr_addr<=s_axi.awaddr;
+	   
+	   if (s_axi.wvalid & s_axi.wready) begin
+	       q_wr_data<=s_axi.wdata;
+	       s_axi.wready<=0;
+	   end
+	   
+	   if (s_axi.wvalid) begin
+	       //s_axil.wready<=0;
+	       case(q_wr_addr)
 	           LEN_ADDR:o_lenght<=q_wr_data;
 	       endcase
 	   end
 	   
+	   o_err<={6'b0,i_err_mtlast,6'b0,i_err_crc,6'b0,i_err_utlast};
+	   
 	   if (i_rst) begin
+	       q_wr_data<=0;
+	       q_wr_addr<=0;
+	       o_lenght<=10;
 	       S<=S0_ADDR_READY;
 	       q_wr_addr<=0;
 	   end
 	   
-	   if (!i_rst) begin
-	       s_axi.awready='1; 
-	       s_axi.wready='1; 
-	   end
+	   
 	   
 	end	
     
