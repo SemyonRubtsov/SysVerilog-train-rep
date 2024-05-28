@@ -58,6 +58,10 @@ module lab5_reg_map #(
     
 	always_ff @(posedge i_clk) begin
 	   
+	   if (q_wr_addr==='x) q_wr_addr<=5;
+	   if (q_rd_addr==='x) q_rd_addr<=5;
+	   //if (q_rd_addr==='x) q_wr_addr<=5;
+	   
 	   if (!i_rst) begin
 	       s_axi.awready<='1; 
 	       s_axi.arready<='1; 
@@ -126,11 +130,13 @@ module lab5_reg_map #(
 	   
 	   if (i_rst) begin
 	       s_axi.rvalid<='0; 
-	       q_wr_data<=0;
-	       q_wr_addr<=0;
+	       //q_wr_data<=0;
+	       //q_wr_addr<=0;
+	       //q_rd_addr
+	       //q_rd_add
 	       o_lenght<=10;
 	       S<=S0_ADDR_READY;
-	       q_wr_addr<=0;
+	       //q_wr_addr<=0;
 	   end
 	   
 	end	

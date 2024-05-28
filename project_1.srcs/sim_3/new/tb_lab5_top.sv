@@ -71,7 +71,7 @@ module tb_lab5_top #(
 	`define MACRO_AXIL_HSK(miso, mosi) \
 		s_axil.``mosi``= '1; \
 		do begin \
-			#dt; \
+			#1; \
 		end while (!(s_axil.``miso`` && s_axil.``mosi``)); \
 		s_axil.``mosi`` = '0; \
 
@@ -128,6 +128,7 @@ module tb_lab5_top #(
 		//t_axil_wr(.ADDR(4), .DATA({8'(0), 24'(625)})); #(15);
 		t_axil_wr(.ADDR(0), .DATA(30)); #(15);
 		t_axil_wr(.ADDR(0), .DATA(15)); #(15);
+		t_axil_wr(.ADDR(4), .DATA(15)); #(15);
 		t_axil_wr(.ADDR(0), .DATA(5)); #(15);
 		//t_axil_wr(.ADDR(0), .DATA(25)); #(dt*5);
 		//t_axil_wr(.ADDR(WR_TRN_TBL), .DATA({8'(0), 24'(625)})); #(dt*5); // truncation table: 31:24 - scan mode id, 23:0 - max period?

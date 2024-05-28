@@ -12,18 +12,22 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="60.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="220.201 ns"></ZoomEndTime>
-      <Cursor1Time time="97.000 ns"></Cursor1Time>
+      <ZoomStartTime time="100.292 ns"></ZoomStartTime>
+      <ZoomEndTime time="140.543 ns"></ZoomEndTime>
+      <Cursor1Time time="107.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="156"></NameColumnWidth>
-      <ValueColumnWidth column_width="83"></ValueColumnWidth>
+      <ValueColumnWidth column_width="79"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="16" />
+   <WVObjectSize size="18" />
    <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/rdata">
       <obj_property name="ElementShortName">rdata[31:0]</obj_property>
       <obj_property name="ObjectShortName">rdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/rvalid">
+      <obj_property name="ElementShortName">rvalid</obj_property>
+      <obj_property name="ObjectShortName">rvalid</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/rready">
       <obj_property name="ElementShortName">rready</obj_property>
@@ -84,5 +88,9 @@
    <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/i_rst">
       <obj_property name="ElementShortName">i_rst</obj_property>
       <obj_property name="ObjectShortName">i_rst</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/q_wr_addr">
+      <obj_property name="ElementShortName">q_wr_addr[3:0]</obj_property>
+      <obj_property name="ObjectShortName">q_wr_addr[3:0]</obj_property>
    </wvobject>
 </wave_config>
