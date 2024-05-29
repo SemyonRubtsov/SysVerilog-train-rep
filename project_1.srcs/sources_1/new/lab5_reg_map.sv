@@ -52,7 +52,7 @@ module lab5_reg_map #(
     
     t_xaddr q_wr_addr;
     t_xdata q_wr_data;
-    
+    logic q_wr_vld;
     t_xaddr q_rd_addr;
     t_xdata q_rd_data;
     
@@ -72,15 +72,23 @@ module lab5_reg_map #(
 	   
 	   //------------------------------------write in regs---------------------------------
 	   
-	   if (s_axi.awvalid & s_axi.awready)
+	   q_wr_vld<=s_axi.wvalid & s_axi.wready;
+	   //s_axi.wready<=~q_wr_vld;
+	   
+	   if (s_axi.awvalid & s_axi.awready) begin
 	       q_wr_addr<=s_axi.awaddr;
+	       s_axi.awready<='0;
+	       //s_axi.wready<=0;
+	       q_wr_vld<='1;
+	   end
 	   
 	   if (s_axi.wvalid & s_axi.wready) begin
 	       q_wr_data<=s_axi.wdata;
 	       s_axi.wready<=0;
+	       q_wr_vld<='0;
 	   end
 	   
-	   if (s_axi.wvalid) begin
+	   if (q_wr_vld) begin
 	       //s_axil.wready<=0;
 	       case(q_wr_addr)
 	           LEN_ADDR:o_lenght<=q_wr_data;
@@ -130,6 +138,7 @@ module lab5_reg_map #(
 	   
 	   if (i_rst) begin
 	       s_axi.rvalid<='0; 
+	       q_wr_vld<='0;
 	       //q_wr_data<=0;
 	       //q_wr_addr<=0;
 	       //q_rd_addr
