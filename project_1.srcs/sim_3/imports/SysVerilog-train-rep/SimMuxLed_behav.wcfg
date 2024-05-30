@@ -12,62 +12,22 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="100.292 ns"></ZoomStartTime>
-      <ZoomEndTime time="140.543 ns"></ZoomEndTime>
-      <Cursor1Time time="107.000 ns"></Cursor1Time>
+      <ZoomStartTime time="5.159 ns"></ZoomStartTime>
+      <ZoomEndTime time="46.210 ns"></ZoomEndTime>
+      <Cursor1Time time="12.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="156"></NameColumnWidth>
-      <ValueColumnWidth column_width="79"></ValueColumnWidth>
+      <ValueColumnWidth column_width="63"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="18" />
-   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/rdata">
-      <obj_property name="ElementShortName">rdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">rdata[31:0]</obj_property>
+   <WVObjectSize size="14" />
+   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/bready">
+      <obj_property name="ElementShortName">bready</obj_property>
+      <obj_property name="ObjectShortName">bready</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/rvalid">
-      <obj_property name="ElementShortName">rvalid</obj_property>
-      <obj_property name="ObjectShortName">rvalid</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/rready">
-      <obj_property name="ElementShortName">rready</obj_property>
-      <obj_property name="ObjectShortName">rready</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/araddr">
-      <obj_property name="ElementShortName">araddr[11:0]</obj_property>
-      <obj_property name="ObjectShortName">araddr[11:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/arready">
-      <obj_property name="ElementShortName">arready</obj_property>
-      <obj_property name="ObjectShortName">arready</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/arvalid">
-      <obj_property name="ElementShortName">arvalid</obj_property>
-      <obj_property name="ObjectShortName">arvalid</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/q_rd_addr">
-      <obj_property name="ElementShortName">q_rd_addr[3:0]</obj_property>
-      <obj_property name="ObjectShortName">q_rd_addr[3:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/q_rd_data">
-      <obj_property name="ElementShortName">q_rd_data[31:0]</obj_property>
-      <obj_property name="ObjectShortName">q_rd_data[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/o_lenght">
-      <obj_property name="ElementShortName">o_lenght[31:0]</obj_property>
-      <obj_property name="ObjectShortName">o_lenght[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/i_clk">
-      <obj_property name="ElementShortName">i_clk</obj_property>
-      <obj_property name="ObjectShortName">i_clk</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/i_rst">
-      <obj_property name="ElementShortName">i_rst</obj_property>
-      <obj_property name="ObjectShortName">i_rst</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/wdata">
-      <obj_property name="ElementShortName">wdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">wdata[31:0]</obj_property>
+   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/bvalid">
+      <obj_property name="ElementShortName">bvalid</obj_property>
+      <obj_property name="ObjectShortName">bvalid</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/awvalid">
       <obj_property name="ElementShortName">awvalid</obj_property>
@@ -81,16 +41,40 @@
       <obj_property name="ElementShortName">awaddr[11:0]</obj_property>
       <obj_property name="ObjectShortName">awaddr[11:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/wdata">
-      <obj_property name="ElementShortName">wdata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">wdata[31:0]</obj_property>
+   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/q_wr_vld">
+      <obj_property name="ElementShortName">q_wr_vld</obj_property>
+      <obj_property name="ObjectShortName">q_wr_vld</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/i_rst">
-      <obj_property name="ElementShortName">i_rst</obj_property>
-      <obj_property name="ObjectShortName">i_rst</obj_property>
+   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/q_sv_vld">
+      <obj_property name="ElementShortName">q_sv_vld</obj_property>
+      <obj_property name="ObjectShortName">q_sv_vld</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/o_lenght">
+      <obj_property name="ElementShortName">o_lenght[31:0]</obj_property>
+      <obj_property name="ObjectShortName">o_lenght[31:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/q_wr_addr">
       <obj_property name="ElementShortName">q_wr_addr[3:0]</obj_property>
       <obj_property name="ObjectShortName">q_wr_addr[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/q_wr_data">
+      <obj_property name="ElementShortName">q_wr_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">q_wr_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/wdata">
+      <obj_property name="ElementShortName">wdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/wvalid">
+      <obj_property name="ElementShortName">wvalid</obj_property>
+      <obj_property name="ObjectShortName">wvalid</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab5_top/lab5_uut/u_reg_map/s_axi/wready">
+      <obj_property name="ElementShortName">wready</obj_property>
+      <obj_property name="ObjectShortName">wready</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_lab5_top/i_clk">
+      <obj_property name="ElementShortName">i_clk</obj_property>
+      <obj_property name="ObjectShortName">i_clk</obj_property>
    </wvobject>
 </wave_config>

@@ -53,6 +53,7 @@ module lab5_reg_map #(
     t_xaddr q_wr_addr;
     t_xdata q_wr_data;
     logic q_wr_vld;
+    logic q_sv_vld;
     t_xaddr q_rd_addr;
     t_xdata q_rd_data;
     
@@ -72,14 +73,11 @@ module lab5_reg_map #(
 	   
 	   //------------------------------------write in regs---------------------------------
 	   
-	   q_wr_vld<=s_axi.wvalid & s_axi.wready;
-	   //s_axi.wready<=~q_wr_vld;
-	   
 	   if (s_axi.awvalid & s_axi.awready) begin
 	       q_wr_addr<=s_axi.awaddr;
 	       s_axi.awready<='0;
-	       //s_axi.wready<=0;
 	       q_wr_vld<='1;
+	       
 	   end
 	   
 	   if (s_axi.wvalid & s_axi.wready) begin
@@ -88,11 +86,13 @@ module lab5_reg_map #(
 	       q_wr_vld<='0;
 	   end
 	   
-	   if (q_wr_vld) begin
-	       //s_axil.wready<=0;
+	   if (s_axi.wready & s_axi.wvalid & q_wr_vld) q_sv_vld<=1;
+	   
+	   if (q_sv_vld) begin
 	       case(q_wr_addr)
-	           LEN_ADDR:o_lenght<=q_wr_data;
+	           LEN_ADDR: o_lenght<=q_wr_data;
 	       endcase
+	       q_sv_vld<=0;
 	   end
 	   
 	   o_err<={6'b0,i_err_mtlast,6'b0,i_err_crc,6'b0,i_err_utlast};
@@ -143,6 +143,7 @@ module lab5_reg_map #(
 	       //q_wr_addr<=0;
 	       //q_rd_addr
 	       //q_rd_add
+	       q_sv_vld<=0;
 	       o_lenght<=10;
 	       S<=S0_ADDR_READY;
 	       //q_wr_addr<=0;

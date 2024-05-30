@@ -105,23 +105,7 @@ module tb_lab5_top #(
 		end
 	endtask : t_axil_rd
 
-    task t_axil_wr_no_data;
-		input t_xaddr ADDR;
-		//input t_xdata DATA;
-		begin
-		// write address
-			s_axil.awaddr = ADDR;
-			`MACRO_AXIL_HSK(awready, awvalid);
-		// write data
-			//s_axil.wdata = DATA;
-			//s_axil.wstrb = '1;
-			//`MACRO_AXIL_HSK(wready, wvalid);
-		// write response
-			`MACRO_AXIL_HSK(bvalid, bready);
-		end
-	endtask : t_axil_wr_no_data
-	
-	task t_axil_wr_no_addr;
+    task t_axil_wr_no_addr;
 		//input t_xaddr ADDR;
 		input t_xdata DATA;
 		begin
@@ -136,7 +120,7 @@ module tb_lab5_top #(
 			`MACRO_AXIL_HSK(bvalid, bready);
 		end
 	endtask : t_axil_wr_no_addr
-
+    
 	localparam t_xaddr RW_TRN_ENA = 'h000; // 0 - truncation enable
 	localparam t_xaddr WR_TRN_TBL = 'h008; // truncation table: 31:24 - scan mode id, 23:0 - max period?
 	localparam t_xaddr RW_GLU_ENA = 'h100; // 0 - gluing enable
@@ -144,12 +128,6 @@ module tb_lab5_top #(
 	localparam t_xaddr RW_DWS_PRM = 'h200; // 15:8 - decimation phase, 7:0 - decimation factor
 
     logic [31:0] t_data ='0;
-
-    initial begin
-    #10;
-    t_axil_wr_no_data(.ADDR(0)); #1;
-    t_axil_wr_no_data(.ADDR(4)); #1;
-    end
 
 	initial begin
 		
@@ -162,8 +140,8 @@ module tb_lab5_top #(
 		//t_axil_rd(.ADDR(RW_DWS_PRM)); #10;
 		
 		//t_axil_wr(.ADDR(RW_TRN_ENA), .DATA(1'b0)); #10; // 0 - truncation enable
-		//t_axil_wr(.ADDR(0), .DATA(40)); #(15);
-		//t_axil_wr(.ADDR(4), .DATA({8'(0), 24'(625)})); #(15);
+		t_axil_wr(.ADDR(0), .DATA(40)); #(15);
+		t_axil_wr(.ADDR(0), .DATA({8'(0), 24'(625)})); #(15);
 		//t_axil_wr(.ADDR(0), .DATA(30)); #(15);
 		//t_axil_wr(.ADDR(0), .DATA(15)); #(15);
 		
@@ -411,8 +389,8 @@ module tb_lab5_top #(
 		.i_clk(i_clk),
         .i_rst(i_rst),
 
-		.s_axi				(s_axil),
-		.m_axi				(m_axil)
+		.s_axil				(s_axil),
+		.m_axil				(m_axil)
 	);
 
 endmodule

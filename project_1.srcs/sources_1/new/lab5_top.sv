@@ -35,8 +35,8 @@ module lab5_top #(
     input i_clk,
     input [3:0] i_rst,
     
-    if_axil.s                 s_axi, // AXI4-Lite slave interface
-    if_axil.m                 m_axi // AXI4-Lite master interface
+    if_axil.s                 s_axil, // AXI4-Lite slave interface
+    if_axil.m                 m_axil // AXI4-Lite master interface
 );
     
     wire [31:0] q_p_len;
@@ -55,8 +55,8 @@ module lab5_top #(
         .i_err_crc(q_err_crc),
         .i_err_utlast(q_err_utlast),
         
-        .s_axi				(s_axi),
-		.m_axi				(m_axi)
+        .s_axi				(s_axil),
+		.m_axi				(m_axil)
     );
     
     lab4_top u_lab4(
