@@ -22,8 +22,8 @@
 
 module lab5_top #(
 	int G_RM_ADDR_W = 12, // AXIL xADDR bit width
-	int G_RM_DATA_B = 4 // AXIL xDATA number of bytes (B)
-	
+	int G_RM_DATA_B = 4, // AXIL xDATA number of bytes (B)
+	parameter FIFO_ENABLE = "False"
 	//int G_CG_L      = 39 * 8, // codogram length (L), bytes
 	//int G_USER_W    = 1, // sync-pulse-as-TUSER bit width (W)
 	//int G_CG_DATA_B = 1, // codogram TDATA number of bytes (B)
@@ -35,8 +35,8 @@ module lab5_top #(
     input i_clk,
     input [3:0] i_rst,
     
-    if_axil.s                 s_axil, // AXI4-Lite slave interface
-    if_axil.m                 m_axil // AXI4-Lite master interface
+    if_axil.s                 s_axil // AXI4-Lite slave interface
+
 );
     
     wire [31:0] q_p_len;
@@ -45,7 +45,32 @@ module lab5_top #(
     logic q_err_utlast;
     logic [2:0] i_rst_lb4;
     
+    if_axil #(
+		.N(G_RM_DATA_B), 
+		.A(G_RM_ADDR_W)
+		) s_axil_fifo ();
+
+	if_axil #(
+		.N(G_RM_DATA_B), 
+		.A(G_RM_ADDR_W)
+		) m_axil_fifo ();
     //assign i_rst_lb4={3{i_rst}};
+    
+    if (FIFO_ENABLE=="True") begin
+    
+    axil_fifo #(
+		.FEATURES			('{'1, '1, '1, '1, '1})
+	) u_fifo (
+		.s_axi_aclk_p      	(i_clk),
+		.m_axi_aclk_p      	(i_clk),
+		
+		.s_axi_arst_n		(!i_rst[0]),
+		.m_axi_arst_n		(!i_rst[0]),
+		.i_fifo_rst_n		(!i_rst[0]),
+
+		.s_axi				(s_axil),
+		.m_axi				(m_axil_fifo)
+	);
     
     lab5_reg_map u_reg_map(
         .i_clk(i_clk),
@@ -55,10 +80,24 @@ module lab5_top #(
         .i_err_crc(q_err_crc),
         .i_err_utlast(q_err_utlast),
         
-        .s_axi				(s_axil),
-		.m_axi				(m_axil)
+        .s_axi				(m_axil_fifo)
     );
     
+    end
+    
+    if (FIFO_ENABLE=="False") begin
+    lab5_reg_map u_reg_map(
+        .i_clk(i_clk),
+        .i_rst(i_rst[0]),
+        .o_lenght(q_p_len),
+        .i_err_mtlast(q_err_mtlast),
+        .i_err_crc(q_err_crc),
+        .i_err_utlast(q_err_utlast),
+        
+        .s_axi				(s_axil)
+		//.m_axi				(m_axil)
+    );
+    end
     lab4_top u_lab4(
         .i_clk(i_clk),
         .i_rst(i_rst[3:1]),

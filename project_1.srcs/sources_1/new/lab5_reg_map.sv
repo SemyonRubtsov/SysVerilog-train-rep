@@ -31,8 +31,8 @@ module lab5_reg_map #(
     output reg [31:0] o_err,
     input logic i_err_mtlast,i_err_crc,i_err_utlast,
     
-    if_axil.s s_axi, // AXI4-Lite slave interface
-    if_axil.m m_axi // AXI4-Lite master interface
+    if_axil.s s_axi // AXI4-Lite slave interface
+
     
     );
     
@@ -93,7 +93,10 @@ module lab5_reg_map #(
 	           LEN_ADDR: o_lenght<=q_wr_data;
 	       endcase
 	       q_sv_vld<=0;
+	       s_axi.bvalid<='1;
 	   end
+	   
+	   if (s_axi.bvalid & s_axi.bready) s_axi.bvalid<='0;
 	   
 	   o_err<={6'b0,i_err_mtlast,6'b0,i_err_crc,6'b0,i_err_utlast};
 	   
