@@ -33,7 +33,6 @@ module lab5_reg_map #(
     
     if_axil.s s_axi // AXI4-Lite slave interface
 
-    
     );
     
     localparam C_RM_DATA_W = 8 * G_RM_DATA_B;
@@ -54,8 +53,11 @@ module lab5_reg_map #(
     t_xdata q_wr_data;
     logic q_wr_vld;
     logic q_sv_vld;
+    //logic q__vld;
     t_xaddr q_rd_addr;
     t_xdata q_rd_data;
+    logic q_rd_a_vld;
+    logic q_rd_d_vld;
     
 	always_ff @(posedge i_clk) begin
 	   
@@ -107,27 +109,34 @@ module lab5_reg_map #(
 	   if (s_axi.arvalid & s_axi.arready) begin
 	       s_axi.arready<='0;
 	       q_rd_addr<=s_axi.araddr;
+	       q_rd_a_vld<=1;
 	   end
 	   //if (s_axi.rvalid & s_axi.rready) begin
 	   //    q_wr_data<=s_axi.wdata;
 	   //    s_axi.wready<=0;
 	   //end
 	   
-	   if (s_axi.arvalid) begin
+	   if (q_rd_a_vld) begin
 	       //s_axil.wready<=0;
 	       case(q_rd_addr)
 	           LEN_ADDR: begin q_rd_data<=o_lenght; end
 	           ERR_ADDR: begin q_rd_data<=o_err; end
 	       endcase
+	       q_rd_a_vld<=0;
+	       q_rd_d_vld<=1;
 	   end
 	   
-	   if (s_axi.rready) begin
+	   if (q_rd_d_vld) begin
 	       s_axi.rdata<=q_rd_data;
 	       s_axi.rvalid<='1;
+	       q_rd_d_vld<=0;
+	       //s_axi.rresp<='1;
 	       //s_axi.rvalid<=s_axi.rready;
 	       //s_axi.rvalid <= 0;
 	   end
 	   
+	   if (s_axi.rvalid & s_axi.rready) s_axi.rvalid<='0;
+	   s_axi.rresp<=0;
 	   //if (s_axi.rready & s_axi.rvalid) begin
 	       //s_axi.rvalid<='0;
 	   //end
