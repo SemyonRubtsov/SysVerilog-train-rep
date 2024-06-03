@@ -142,7 +142,7 @@ module tb_lab5_top #(
 		
 		//t_axil_wr(.ADDR(RW_TRN_ENA), .DATA(1'b0)); #10; // 0 - truncation enable
 		t_axil_wr(.ADDR(0), .DATA(40), .SETTINGS(4'b1111)); #(15);
-		t_axil_wr(.ADDR(0), .DATA({8'(0), 24'(625)}), .SETTINGS(4'b1111)); #(15);
+		t_axil_wr(.ADDR(0), .DATA({8'(0), 24'(25)}), .SETTINGS(4'b1111)); #(125);
 		//t_axil_wr(.ADDR(0), .DATA(30)); #(15);
 		//t_axil_wr(.ADDR(0), .DATA(15)); #(15);
 		
@@ -170,7 +170,9 @@ module tb_lab5_top #(
 		//t_axil_rd(.ADDR(RW_DWS_PRM),.DATA(t_data)); #10;
 
 	end
-
+    
+    always #(400) t_axil_rd(.ADDR(4),.DATA(t_data));
+    
 	always #(T_CLK/2.0) i_clk = ~i_clk;
 
 	if_axis #(.N(G_CG_DATA_B), .U(G_USER_W), .PAYMASK(4'b1001)) s_axis_cg (); // input codogram AXIS

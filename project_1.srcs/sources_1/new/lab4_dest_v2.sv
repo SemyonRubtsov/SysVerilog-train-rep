@@ -214,8 +214,8 @@ module lab4_dest_v2#(
                q_data<=q_data;
                //if (m_byte_counter==m_pkt_len) R_CRC <= q_data; //s_axis.tready<=1;
                
-               if (o_crc_res_dat == q_data) begin o_succes='1; o_err_crc='0; o_err_mtlast='0; o_err_utlast='0; end 
-               if (o_crc_res_dat != q_data) begin o_succes='0; o_err_crc='1; end 
+               if (o_crc_res_dat == q_data) begin o_succes='1; o_err_crc<='0; o_err_mtlast<='0; o_err_utlast<='0; end 
+               if (o_crc_res_dat != q_data) begin o_succes='0; o_err_crc<='1; end 
                
                if (s_axis.tvalid & R_CRC!=72) begin
                     S<=S0;
